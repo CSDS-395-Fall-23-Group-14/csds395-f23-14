@@ -3,7 +3,6 @@ import React from "react";
 import logo1 from "../../images/EZ$-logo-transparent.png";
 import "./navbar.css";
 import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import {Box, Tab, Tabs } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
@@ -17,7 +16,7 @@ export default function Navbar() {
         <div className="wrapper">
             <div className="navbar-left">
                 <div className="logo-wrapper">
-                    <img src={logo1} height={60}></img>
+                    <img src={logo1} height={60} alt="logo"></img>
                 </div>
             </div>
             <div className="navbar-center">

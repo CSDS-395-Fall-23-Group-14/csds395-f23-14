@@ -1,4 +1,4 @@
-import { BorderBottom } from "@mui/icons-material";
+
 import "./stock-screener.css";
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
