@@ -35,7 +35,6 @@ export default function Stock_screener() {
                 <ButtonGroup size="small" variant="outlined">
                     <Button sx={{borderColor: 'gray', color: "gray", '&:hover': {borderColor: "gray"}}}><DownloadIcon/></Button>
                 </ButtonGroup>
-                <Button size="small"></Button>
             </div>
             <Box sx={{borderBottom: 1, width: "100%", margin: "1rem 0"}}/>
         </div>
