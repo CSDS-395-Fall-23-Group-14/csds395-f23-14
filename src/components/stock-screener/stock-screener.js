@@ -21,8 +21,12 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, mkt_cap, pe, eps, employees, sector) {
+    price = price + 'USD';
     return {
         name,
         price,
@@ -36,13 +40,47 @@ function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, 
         eps,
         employees,
         sector
+        
     };
+}
+
+function checkRating(tech_rating) {
+    if (tech_rating === 'buy') {
+        return <KeyboardArrowUpIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}}></KeyboardArrowUpIcon>
+    }
+    else {
+        return <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}}></KeyboardArrowDownIcon>
+    }
+}
+
+function checkPercent(chg_percent) {
+    if(chg_percent > 0) {
+        return <h3 style={{color: 'green', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg_percent}%</h3>
+    }
+    else if(chg_percent < 0) {
+        return <h3 style={{color: 'red', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg_percent}%</h3>
+    }
+    else {
+        return <h3 style={{color: 'blue', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg_percent}%</h3>
+    }
+}
+
+function checkChange(chg) {
+    if(chg > 0) {
+        return <h3 style={{color: 'green', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg}</h3>
+    }
+    else if (chg < 0) {
+        return <h3 style={{color: 'red', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg}</h3>
+    }
+    else {
+        return <h3 style={{color: 'blue', fontFamily: "'Roboto', 'Helvetica','Arial', sans-serif", fontWeight: '400', fontSize: '14px'}}>{chg}</h3>
+    }
 }
 
 const rows = [
 createData('Apple Inc', 182.91, -3.58, -6.79, 'sell', 81.174, 14.848, 2.86, 30.74, 5.898, 164, 'Electronic Technology'),
-createData('Microsoft Corp', 332.88, -0.2, -0.67, 'buy', 17.351, 5.776, 2.473, 34.37,9.72, 221, 'Technology Services'),
-createData('Alphabet Inc', 135.37, -0.98, -0.67, 'buy', 15.706, 2.126, 1.701, 28.64, 4.75, 190.234, 'Technology Services'),
+createData('Microsoft Corp', 332.88, 1.1, 0.67, 'buy', 17.351, 5.776, 2.473, 34.37,9.72, 221, 'Technology Services'),
+createData('Alphabet Inc', 135.37, 0, 0, 'buy', 15.706, 2.126, 1.701, 28.64, 4.75, 190.234, 'Technology Services'),
 createData('Amazon.com Inc', 135.36, -1.39, -1.91, 'buy', 39.359, 5.328, 1.389, 107.64, 1.27, 1.541, 'Retail Trade'),
 createData('Nvidia corp', 470.61, -3.06, -14.87, 'buy', 46.732, 21.988, 1.162, 113.68, 4.18, 26.98, 'Electronic Tech'),
 createData('Tesla', 251.92, -1.78,-4.57, 'buy', 116.543, 29.36, 799.593,71.47, 3.87, 127.855, 'Consumer Durables'),
@@ -77,37 +115,37 @@ return stabilizedThis.map((el) => el[0]);
 }
   
 const headCells = [
-{
+    {
     id: 'name',
     numeric: false,
     disablePadding: true,
     label: 'TICKER',
-},
-{
+    },
+    {
     id: 'price',
     numeric: true,
     disablePadding: false,
     label: 'PRICE',
-},
-{
+    },
+    {
     id: 'chg_percent',
     numeric: true,
     disablePadding: false,
     label: 'CHG%',
-},
-{
+    },
+    {
     id: 'chg',
     numeric: true,
     disablePadding: false,
     label: 'CHG',
-},
-{
+    },
+    {
     id: 'tech_rating',
     numeric: false,
     disablePadding: false,
     label: 'TECHNICAL_RATING',
-},
-{
+    },
+    {
     id: 'vol',
     numeric: true,
     disablePadding: false,
@@ -381,9 +419,9 @@ function EnhancedTable() {
                         {row.name}
                       </TableCell>
                       <TableCell align="center">{row.price}</TableCell>
-                      <TableCell align="center">{row.chg_percent}</TableCell>
-                      <TableCell align="center">{row.chg}</TableCell>
-                      <TableCell align="center">{row.tech_rating}</TableCell>
+                      <TableCell align="center">{checkPercent(row.chg_percent)}</TableCell>
+                      <TableCell style={{display: 'flex', flexDirection:'row', alignItems: 'center'}} align="center">{checkChange(row.chg)}&nbsp;USD</TableCell>
+                      <TableCell align="center">{checkRating(row.tech_rating)} {row.tech_rating}</TableCell>
                       <TableCell align="center">{row.vol}</TableCell>
                       <TableCell align="center">{row.vol_price}</TableCell>
                       <TableCell align="center">{row.mkt_cap}</TableCell>
@@ -405,21 +443,23 @@ function EnhancedTable() {
                 )}
               </TableBody>
             </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+        </TableContainer>
+        <div className='table-footer'>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+            />
+        </div>
         </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        />
       </Box>
     );
   }
