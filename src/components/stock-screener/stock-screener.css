@@ -16,3 +16,9 @@
     justify-content: space-between;
     margin-top:1rem;
 }
+
+.table-footer {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
