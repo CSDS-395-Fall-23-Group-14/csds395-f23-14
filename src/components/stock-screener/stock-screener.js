@@ -473,7 +473,7 @@ export default function Stock_screener() {
                 <EnhancedTable/>
             </div>
             <div className="bar-chart">
-              <BarChart data={rows}/>
+              <BarChart data={rows.sort((a, b) => b.chg_percent - a.chg_percent)}/>
             </div>
         </div>
     );

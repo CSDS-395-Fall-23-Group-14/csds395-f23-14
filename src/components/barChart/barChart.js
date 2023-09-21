@@ -34,40 +34,42 @@ function YAxis({ scale }) {
 }
 
 function Bars({ data, xAxisHeight, scaleX, scaleY, hover, unHover, hoveredBar }) {
+  const [toolTipPos, setToolTipPos] = useState({x: 0, y: 0});
+  
   return (
     <>
       {
-        data.map((datum) =>
-          <rect
+        data.map((datum) => {
+          const topY = 0 <= datum.chg_percent ? scaleY(datum.chg_percent) : xAxisHeight;
+          const height = (xAxisHeight - scaleY(Math.abs(datum.chg_percent)));
+          return <rect
             key={`bar-${datum.name}`}
             x={scaleX(datum.name)}
-            y={0 <= datum.chg_percent ? scaleY(datum.chg_percent) : xAxisHeight}
+            y={topY}
             width={scaleX.bandwidth()}
-            height={(xAxisHeight - scaleY(Math.abs(datum.chg_percent)))}
+            height={height}
             fill={0 <= datum.chg_percent ? 'green' : 'red'}
             style={{'stroke': 'black', 'stroke-width': (datum === hoveredBar ? 2 : 0)}}
-            onMouseOver={() => hover(datum)}
+            onMouseOver={() => {
+              hover(datum);
+              setToolTipPos({x: scaleX(datum.name), y: datum.chg_percent < 0 ? topY + height + 10 : topY - 10});
+            }}
             onMouseOut={() => unHover()}
           />
-        )
+        })
       }
       
       {
         hoveredBar ?
-        <ToolTip
-          datum={hoveredBar}
-          scaleX={scaleX}
-          scaleY={scaleY}
-        /> : null
+        <ToolTip datum={hoveredBar} x={toolTipPos.x} y={toolTipPos.y} /> : null
       }
     </>
   );
 }
 
-function ToolTip({ datum, scaleX, scaleY }) {
-  console.log(datum);
-  return <text x="20" y="20">
-    {datum.name}
+function ToolTip({ datum, x, y }) {
+  return <text x={`${x}`} y={`${y}`}>
+    {datum.chg_percent}
   </text>
 }
 
@@ -97,7 +99,8 @@ function BarChart({ data }) {
 
   return (
     <>
-      <svg viewBox='0 0 500 300'>
+      <svg viewBox='0 0 500 300'
+        font-size='20'>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           <Bars
             data={dataSorted}
@@ -108,7 +111,7 @@ function BarChart({ data }) {
             unHover={() => setHoveredBar(null)}
             hoveredBar={hoveredBar}
           />
-          <XAxis scale={scaleX} transform={`translate(0, ${xAxisHeight})`} />
+          <XAxis scale={scaleX} transform={`translate(0, ${xAxisHeight})`}/>
           <YAxis scale={scaleY} />
         </g>
       </svg>
