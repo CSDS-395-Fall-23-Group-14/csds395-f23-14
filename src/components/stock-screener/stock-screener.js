@@ -23,7 +23,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
+import BarChart from '../barChart/barChart';
 
 function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, mkt_cap, pe, eps, employees, sector) {
     price = price + 'USD';
@@ -471,6 +471,9 @@ export default function Stock_screener() {
             <Box sx={{borderBottom: 1, width: "100%"}}/>
             <div className="stock-list">
                 <EnhancedTable/>
+            </div>
+            <div className="bar-chart">
+              <BarChart data={rows}/>
             </div>
         </div>
     );
