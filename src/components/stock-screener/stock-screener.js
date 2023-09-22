@@ -25,6 +25,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import BarChart from '../barChart/barChart';
 
+import GoogleAuth from '../googleAuth/googleAuth';
+
 function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, mkt_cap, pe, eps, employees, sector) {
     price = price + 'USD';
     return {
@@ -467,6 +469,7 @@ function EnhancedTable() {
 export default function Stock_screener() {
     return (
         <div className="screener-wrapper">
+          <GoogleAuth/>
             <h1 className="screener-h1">Stock Screener</h1>
             <Box sx={{borderBottom: 1, width: "100%"}}/>
             <div className="stock-list">
