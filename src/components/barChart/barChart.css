@@ -1,6 +1,10 @@
 .barChart {
-  background: #eee;
+  /* background: #eee; */
   overflow: visible;
+}
+
+.tooltip {
+  position: fixed;
 }
 
 text {
