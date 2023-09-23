@@ -9,64 +9,6 @@ import {
 
 import './barChart.css';
 
-function XAxis({ scale, transform }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      select(ref.current).call(axisBottom(scale));
-    }
-  }, [scale]);
-
-  return <g ref={ref} transform={transform} />;
-}
-
-function YAxis({ scale }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      select(ref.current).call(axisLeft(scale));
-    }
-  }, [scale]);
-
-  return <g ref={ref} />;
-}
-
-function Bars({ data, xAxisHeight, scaleX, scaleY, hover, unHover, hoveredBar }) {
-  const [toolTipPos, setToolTipPos] = useState({x: 0, y: 0});
-  
-  return (
-    <>
-      {
-        data.map((datum) => {
-          const topY = 0 <= datum.chg_percent ? scaleY(datum.chg_percent) : xAxisHeight;
-          const height = (xAxisHeight - scaleY(Math.abs(datum.chg_percent)));
-          return <rect
-            key={`bar-${datum.name}`}
-            x={scaleX(datum.name)}
-            y={topY}
-            width={scaleX.bandwidth()}
-            height={height}
-            fill={0 <= datum.chg_percent ? 'green' : 'red'}
-            style={{'stroke': 'black', 'stroke-width': (datum === hoveredBar ? 2 : 0)}}
-            onMouseOver={() => {
-              hover(datum);
-              setToolTipPos({x: scaleX(datum.name), y: datum.chg_percent < 0 ? topY + height + 10 : topY - 10});
-            }}
-            onMouseOut={() => unHover()}
-          />
-        })
-      }
-      
-      {
-        hoveredBar ?
-        <ToolTip datum={hoveredBar} x={toolTipPos.x} y={toolTipPos.y} /> : null
-      }
-    </>
-  );
-}
-
 function ToolTip({ datum, x, y }) {
   return <text x={`${x}`} y={`${y}`}>
     {datum.chg_percent}
@@ -78,18 +20,14 @@ function BarChart({ data, width, height }) {
   const svgRef = useRef();
   
   useEffect(() => {
-    
-    const chgs = data.map(({ chg_percent }) => chg_percent);
-    const minChg = Math.min(...chgs, -1.25);
-    const maxChg = Math.max(...chgs, 1.25);
-    
-    const xAxisHeight = maxChg / (maxChg - minChg);
+    const minChg = Math.min(...data.map(e => e.chg_percent), -1.25) - 0.25;
+    const maxChg = Math.max(...data.map(e => e.chg_percent), 1.25) + 0.25;
     
     const svg = select(svgRef.current);
     
     // Set up the y-axis
     const scaleY = scaleLinear()
-      .domain([minChg - 0.25, maxChg + 0.25])
+      .domain([minChg, maxChg])
       .range([height, 0]);
     const yAxis = axisLeft(scaleY);
     svg
@@ -107,6 +45,11 @@ function BarChart({ data, width, height }) {
       .style('transform', `translateY(${scaleY(0)}px)`)
       .call(xAxis);
     
+    // Set up the bars
+    const scaleCol = scaleLinear()
+      .domain([minChg, 0, maxChg])
+      .range(["red", 'orange', "green"])
+      .clamp(true);
     
     svg
       .selectAll('.bar')
@@ -116,13 +59,24 @@ function BarChart({ data, width, height }) {
       
       .attr('x', ({ name })=> scaleX(name))
       .attr('width', scaleX.bandwidth())
+    
+    // Animate the bars and colors
+    svg.selectAll('.bar')
+      .attr('height', 0)
+      .attr('y', scaleY(0))
+      .attr('fill', scaleCol(0))
       
+      .transition().duration((value, index) => 100 * (index + 4))
+      
+      .attr('height', ({ chg_percent }) => scaleY(0) - scaleY(Math.abs(chg_percent)))
       .attr('y', ({ chg_percent }) => scaleY(Math.max(0, chg_percent)))
-      .attr('height', ({ chg_percent }) => scaleY(0) - scaleY(Math.abs(chg_percent)));
+      .attr('fill', ({ chg_percent }) => scaleCol(chg_percent));
       
   }, [data, height, width]);
-  //
   
+  useEffect(() => {
+    
+  }, [])
   
   return (
     <svg
