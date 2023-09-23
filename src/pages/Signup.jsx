@@ -87,15 +87,14 @@ function SignUp() {
 						{error ? <Alert severity="error">{error}</Alert> : null}
 						<TextField
 							margin='normal'
-							label='Email Address - cwru395@gmail.com'
+							label='Email Address'
 							name='email'
 							type='email'
 							fullWidth
-							autoFocus
 						/>
 						<TextField
 							margin='normal'
-							label='Password - ezmoney'
+							label='Password'
 							name='password'
 							type='password'
 							fullWidth
