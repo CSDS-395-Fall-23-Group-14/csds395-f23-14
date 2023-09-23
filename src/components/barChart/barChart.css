@@ -3,6 +3,11 @@
   overflow: visible;
 }
 
+.tooltip {
+  position: relative;
+  width: fit-content;
+}
+
 text {
   font-size: 8px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
