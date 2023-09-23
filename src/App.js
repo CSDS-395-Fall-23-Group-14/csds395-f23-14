@@ -1,23 +1,51 @@
 import './App.css';
 import React from "react";
-import Navbar from './components/navbar/navbar.js';
-import StockScreener from './components/stock-screener/stock-screener.js';
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
+import AuthContextProvider from './context/AuthContext';
+import Protected from './components/protected';
+
+/* Pages */
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Home from './pages/Home';
 
 function App() {
   return (
     <>
-      <Router>
-        <div className='header'>
-          <Navbar />
-        </div>
-        <div className='body'>
-          <Routes>
-            <Route exact path="/" element={<StockScreener/>}/>
-          </Routes>
-        </div>
-      </Router>
-
+      <AuthContextProvider>
+        <Routes>
+          {/* Login Page */}
+          <Route
+            path='/login'
+            element={<Login />}
+          />
+          
+          {/* Registration Page */}
+          <Route
+            path='/signup'
+            element={<Signup />}
+          />
+          
+          {/* Home Page - Password protected */}
+          <Route
+            path='/'
+            element={
+              <Protected>
+                <Home />
+              </Protected>
+            }
+          />
+          
+          {/* Any other page redirects to the home page */}
+          <Route
+            path='*'
+            element={
+              <Navigate to='/'/>
+            }
+          />
+          
+        </Routes>
+      </AuthContextProvider>
     </>
   );
 }
