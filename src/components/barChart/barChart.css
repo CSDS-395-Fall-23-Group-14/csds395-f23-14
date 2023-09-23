@@ -1,22 +1,9 @@
-.chartSVG {
-  background-color: white;
+.barChart {
+  background: #eee;
+  overflow: visible;
 }
 
 text {
-  font-size: 5px;
+  font-size: 8px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
-}
-
-/* for screens 2000px or less */
-@media (max-width: 1500px) {
-  text {
-    font-size: 8px;
-  }
-}
-
-/* for screens 1000px or less */
-@media (max-width: 800px) {
-  text {
-    font-size: 14px;
-  }
 }

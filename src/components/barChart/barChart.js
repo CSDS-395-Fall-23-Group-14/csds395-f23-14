@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   axisBottom,
   axisLeft,
@@ -73,50 +73,66 @@ function ToolTip({ datum, x, y }) {
   </text>
 }
 
-function BarChart({ data }) {
-  const [ hoveredBar, setHoveredBar ] = useState(null);
+function BarChart({ data, width, height }) {
+  // const [ hoveredBar, setHoveredBar ] = useState(null);
+  const svgRef = useRef();
   
-  const dataSorted = data.sort((a, b) => b.chg_percent - a.chg_percent)
-  
-  const margin = { top: 10, right: 0, bottom: 20, left: 30 };
-  const width = 500 - margin.left - margin.right;
-  const height = 300 - margin.top - margin.bottom;
-	
-	const chgs = dataSorted.map(({ chg_percent }) => chg_percent);
-  const minChg = Math.min(...chgs, -1.25);
-  const maxChg = Math.max(...chgs, 1.25);
-
-  const scaleX = scaleBand()
-    .domain(dataSorted.map(({ name }) => name))
-    .range([0, width])
-    .padding(0.5);
+  useEffect(() => {
     
-  const scaleY = scaleLinear()
-    .domain([minChg - 0.25, maxChg + 0.25])
-    .range([height, 0]);
-  
-  const xAxisHeight = height * maxChg / (maxChg - minChg);
-
-  return (
-    <>
-      <svg viewBox='0 0 500 300'
-        font-size='20'>
-        <g transform={`translate(${margin.left}, ${margin.top})`}>
-          <Bars
-            data={dataSorted}
-            xAxisHeight={xAxisHeight}
-            scaleX={scaleX}
-            scaleY={scaleY}
-            hover={(bar) => setHoveredBar(bar)}
-            unHover={() => setHoveredBar(null)}
-            hoveredBar={hoveredBar}
-          />
-          <XAxis scale={scaleX} transform={`translate(0, ${xAxisHeight})`}/>
-          <YAxis scale={scaleY} />
-        </g>
-      </svg>
+    const chgs = data.map(({ chg_percent }) => chg_percent);
+    const minChg = Math.min(...chgs, -1.25);
+    const maxChg = Math.max(...chgs, 1.25);
+    
+    const xAxisHeight = maxChg / (maxChg - minChg);
+    
+    const svg = select(svgRef.current);
+    
+    // Set up the y-axis
+    const scaleY = scaleLinear()
+      .domain([minChg - 0.25, maxChg + 0.25])
+      .range([height, 0]);
+    const yAxis = axisLeft(scaleY);
+    svg
+      .select('.yaxis')
+      .call(yAxis);
+    
+    // Set up the xaxis
+    const scaleX = scaleBand()
+      .domain(data.map(({ name }) => name))
+      .range([0, width])
+      .padding(0.5);
+    const xAxis = axisBottom(scaleX).ticks(data.length);
+    svg
+      .select('.xaxis')
+      .style('transform', `translateY(${scaleY(0)}px)`)
+      .call(xAxis);
+    
+    
+    svg
+      .selectAll('.bar')
+      .data(data)
+      .join('rect')
+      .attr('class', 'bar')
       
-    </>
+      .attr('x', ({ name })=> scaleX(name))
+      .attr('width', scaleX.bandwidth())
+      
+      .attr('y', ({ chg_percent }) => scaleY(Math.max(0, chg_percent)))
+      .attr('height', ({ chg_percent }) => scaleY(0) - scaleY(Math.abs(chg_percent)));
+      
+  }, [data, height, width]);
+  //
+  
+  
+  return (
+    <svg
+      className='barChart'
+      width={width}
+      height={height}
+      ref={svgRef}>
+      <g className='yaxis' />
+      <g className='xaxis' />
+    </svg>
   );
 }
 
