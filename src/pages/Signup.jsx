@@ -76,9 +76,23 @@ function SignUp() {
 					<Box
 						component='form'
 						onSubmit={handleGenericSignup}
-						sx={{alignItems:'center'}}
+						sx={{ alignItems:'center' }}
 					>
 						{error ? <Alert severity="error">{error}</Alert> : null}
+						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
+							<TextField
+								margin='normal'
+								label='First Name'
+								name='first_name'
+								type='first_name'
+							/>
+							<TextField
+								margin='normal'
+								label='Last Name'
+								name='last_name'
+								type='last_name'
+							/>
+						</Box>
 						<TextField
 							margin='normal'
 							label='Email Address'
