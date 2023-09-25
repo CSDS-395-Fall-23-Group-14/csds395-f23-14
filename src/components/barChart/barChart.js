@@ -12,6 +12,7 @@ import { Card } from '@mui/material';
 import './barChart.css';
 
 function BarChart({ data, width, height, property }) {
+function BarChart({ data, width, height, property }) {
   const svgRef = useRef();
   
   useEffect(() => {
