@@ -1,11 +1,16 @@
+.barChartContainer {
+  display: block;
+}
+
 .barChart {
-  /* background: #eee; */
   overflow: visible;
 }
 
 .tooltip {
-  position: relative;
   width: fit-content;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
 }
 
 text {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import {
 	Button,
 	TextField,
@@ -17,13 +17,6 @@ import { useAuth } from '../context/AuthContext';
 function Login() {
 	const { genericLogin, googleLogin, user } = useAuth();
 	const [isWrongPass, setIsWrongPass] = useState(false);
-	const navigate = useNavigate();
-	
-	// If the user changes, redirect to /home
-	useEffect(() => {
-		if (user)
-			navigate('/home');
-	}, [navigate, user]);
 	
 	const handleGoogleLogin = async () => {
 		try {
@@ -45,6 +38,7 @@ function Login() {
 	};
 	
 	return (
+		user ? <Navigate to='/home'/> :
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -100,8 +94,9 @@ function Login() {
 							Log in
 						</Button>
 						
+						{"Don't have an account? "}
 						<Link href='/signup'>
-							{"Don't have an account? Sign Up"}
+							{"Sign Up"}
 						</Link>
 						
 						<h3 align-self='centered'>or</h3>
