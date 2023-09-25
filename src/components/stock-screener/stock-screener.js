@@ -468,11 +468,26 @@ export default function Stock_screener() {
 	
 	return (
 		<div className="screener-wrapper">
-			<BarChart
-				data={rows.sort((a, b) => b.chg_percent - a.chg_percent)}
-				width={500}
-				height={300}
-			/>
+			<div className='barCharts'>
+				<BarChart
+					data={rows}
+					width={450}
+					height={300}
+					property='chg_percent'
+				/>
+				<BarChart
+					data={rows}
+					width={450}
+					height={300}
+					property='vol'
+				/>
+				<BarChart
+					data={rows}
+					width={450}
+					height={300}
+					property='employees'
+				/>
+			</div>
 			<Box sx={{borderBottom: 1, width: "100%"}}/>
 			<div className="stock-list">
 				<EnhancedTable />

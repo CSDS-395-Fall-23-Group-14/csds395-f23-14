@@ -1,11 +1,19 @@
+.barChartContainer {
+  width: fit-content;
+  background-color: white;
+  padding: 24px;
+  margin:10px;
+}
+
 .barChart {
-  /* background: #eee; */
   overflow: visible;
 }
 
 .tooltip {
-  position: relative;
   width: fit-content;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
 }
 
 text {

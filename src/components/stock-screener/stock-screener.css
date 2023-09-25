@@ -22,3 +22,10 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.barCharts {
+    display: flex;
+    inset: 10px;
+    flex-direction: rows;
+    flex-wrap: wrap;
+}

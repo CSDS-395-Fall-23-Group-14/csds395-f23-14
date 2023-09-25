@@ -1,29 +1,32 @@
 import React, { useEffect, useRef } from "react";
 import {
-  axisBottom,
-  axisLeft,
+  axisTop,
+  axisRight,
   scaleBand,
   scaleLinear,
   select,
   pointer
 } from "d3";
+import { Card } from '@mui/material';
 
 import './barChart.css';
 
-function BarChart({ data, width, height }) {
+function BarChart({ data, width, height, property }) {
   const svgRef = useRef();
   
   useEffect(() => {
     const svg = select(svgRef.current);
     
-    const minChg = Math.min(...data.map(e => e.chg_percent), -1.25) - 0.25;
-    const maxChg = Math.max(...data.map(e => e.chg_percent), 1.25) + 0.25;
+    const container = svg._groups[0][0].parentNode;
+    
+    const minChg = Math.min(...data.map(e => e[property]), -1.25) - 0.25;
+    const maxChg = Math.max(...data.map(e => e[property]), 1.25) + 0.25;
     
     // Set up the y-axis
     const scaleY = scaleLinear()
       .domain([minChg, maxChg])
       .range([height, 0]);
-    const yAxis = axisLeft(scaleY);
+    const yAxis = axisRight(scaleY);
     svg
       .select('.yaxis')
       .call(yAxis);
@@ -35,7 +38,7 @@ function BarChart({ data, width, height }) {
       .padding(0.5)
       
     // Todo: tick values should be ticker symbols and should be above or below the x-axis to avoid the chart bars
-    const xAxis = axisBottom(scaleX)
+    const xAxis = axisTop(scaleX)
       .tickValues(new Array(data.length).fill(""));
     svg
       .select('.xaxis')
@@ -66,9 +69,9 @@ function BarChart({ data, width, height }) {
       
       .transition().duration((_value, index) => 100 * (index + 4))
       
-      .attr('height', ({ chg_percent }) => scaleY(0) - scaleY(Math.abs(chg_percent)))
-      .attr('y', ({ chg_percent }) => scaleY(Math.max(0, chg_percent)))
-      .attr('fill', ({ chg_percent }) => scaleCol(chg_percent));
+      .attr('height', (datum) => scaleY(0) - scaleY(Math.abs(datum[property])))
+      .attr('y', (datum) => scaleY(Math.max(0, datum[property])))
+      .attr('fill', (datum) => scaleCol(datum[property]));
     
     const tooltip = select('.tooltip')
       .style("opacity", 0)
@@ -80,42 +83,43 @@ function BarChart({ data, width, height }) {
       .style("padding", "10px");
     
     const mouseover = (event) => {
-      const {name, chg_percent} = event.explicitOriginalTarget.__data__;
+      const datum = event.explicitOriginalTarget.__data__;
       const [x, y] = pointer(event);
       tooltip
-        .style('left', `${x + 20}px`)
-        .style('top', `${y}px`)
-        .html(name + ":<br>Chg Percent: " + chg_percent)
+        .style('left', `${x + 20 + container.offsetLeft}px`)
+        .style('top', `${y + container.offsetTop}px`)
+        .html(datum.name + `:<br>${property}: ` + datum[property])
         .style('opacity', 1);
     }
     const mousemove = (event) => {
       const [x, y] = pointer(event);
       tooltip
-        .style('left', `${x + 20}px`)
-        .style('top', `${y}px`)
+        .style('left', `${x + 20 + container.offsetLeft}px`)
+        .style('top', `${y + container.offsetTop}px`)
     }
     const mouseleave = (event) => {
       const [x, y] = pointer(event);
       tooltip
-        .style('left', `${x + 20}px`)
-        .style('top', `${y}px`)
+        .style('left', `${x + 20 + container.offsetLeft}px`)
+        .style('top', `${y + container.offsetTop}px`)
         .style('opacity', 0);
     }
     
     // Add the event listeners to the chart
     // Add mousemove listener to the container div so that dragging
     //     onto the tooltip doesn't jam it
-    select('.barChartContainer')
-      .on('mousemove', mousemove)
-      .on('scroll', mousemove);
+    container.onmousemove = mousemove;
+    container.onwheel = mousemove;
     svg.selectAll('.bar')
       .on('mouseover', mouseover)
       .on('mouseleave', mouseleave);
     
-  }, [data, height, width]);
+  }, [data, height, property, width]);
   
   return (
-    <div className='barChartContainer'>
+    <Card
+      className='barChartContainer'
+      variant='outlined'>
       <div className='tooltip' />
       <svg
         className='barChart'
@@ -125,7 +129,7 @@ function BarChart({ data, width, height }) {
         <g className='yaxis' />
         <g className='xaxis' />
       </svg>
-    </div>
+    </Card>
   );
 }
 
