@@ -13,10 +13,16 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
+import { getAuth, updatePassword, updateProfile } from "firebase/auth";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { auth, db } from '../../src/firebaseConfig';
 
 function SignUp() {
 	const { createUser, googleLogin, user } = useAuth();
 	const [error, setError] = useState(null);
+	const auth = getAuth();
+    const currentUser = auth.currentUser;
+	//const db = firebase.firestore();
 
 	const handleGoogleSignup = async () => {
 		try {
@@ -28,10 +34,24 @@ function SignUp() {
 		
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
+		//console.log(event.currentTarget);
 		const data = new FormData(event.currentTarget);
+		//console.log(data);
+		const first_name = data.get('first_name');
+		const last_name = data.get('last_name');
 		
 		try {
-			await createUser(data.get('email'), data.get('password'));
+			await createUser(data.get('email'), data.get('password'))
+			.then((user) => {
+				const displayName = user.user.email.split("@")[0];
+				updateProfile(user.user, {
+					displayName: displayName
+				});
+				addDoc(collection(db, "users"), {
+					first_name: data.get('first_name'), last_name: data.get('last_name')
+				})
+			});
+		
 		} catch (error) {
 			switch (error.code) {
 				case 'auth/email-already-in-use':
