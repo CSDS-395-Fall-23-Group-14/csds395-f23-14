@@ -34,11 +34,7 @@ function SignUp() {
 		
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
-		//console.log(event.currentTarget);
 		const data = new FormData(event.currentTarget);
-		//console.log(data);
-		const first_name = data.get('first_name');
-		const last_name = data.get('last_name');
 		
 		try {
 			await createUser(data.get('email'), data.get('password'))
