@@ -4,9 +4,21 @@ import { Button } from '@mui/material';
 import Navbar from '../components/navbar/navbar';
 import StockScreener from '../components/stock-screener/stock-screener';
 
+/**
+ * The Home component representing the main page of the application.
+ *
+ * @component
+ */
 function Home() {
   const { logOut } = useAuth();
   
+  /**
+   * Handles the logout button click event.
+   * Calls the logout function and handles any errors.
+   *
+   * @async
+   * @function
+   */
   const handleLogOut = async () => {
     try {
       await logOut();

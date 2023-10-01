@@ -13,17 +13,26 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
-import { getAuth, updatePassword, updateProfile } from "firebase/auth";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-import { auth, db } from '../../src/firebaseConfig';
+import { updateProfile } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from '../../src/firebaseConfig';
 
+/**
+ * The SignUp component for user registration.
+ *
+ * @component
+ */
 function SignUp() {
 	const { createUser, googleLogin, user } = useAuth();
 	const [error, setError] = useState(null);
-	const auth = getAuth();
-    const currentUser = auth.currentUser;
-	//const db = firebase.firestore();
-
+	
+	/**
+	 * Handles Google signup button click event.
+	 * Calls the Google login function and handles any errors.
+	 *
+	 * @async
+	 * @function
+	 */
 	const handleGoogleSignup = async () => {
 		try {
 			await googleLogin();
@@ -31,7 +40,17 @@ function SignUp() {
 			console.log(error);
 		}
 	};
-		
+	
+	/**
+	 * Handles the generic signup form submission.
+	 * Calls the createUser function with user-provided email and password.
+	 * Updates the user profile and adds user data to Firestore upon successful signup.
+	 * Sets the "error" state if signup fails.
+	 *
+	 * @async
+	 * @function
+	 * @param {Event} event - The form submission event.
+	 */
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
@@ -55,14 +74,14 @@ function SignUp() {
 				case 'auth/weak-password':
 					setError('Password should be at least 6 characters'); break;
 				case 'auth/missing-password':
-					setError('Please input a password'); break;
+					setError('Please enter a password'); break;
 				default:
 					console.error(error);
 			}
 		}
 	};
 	
-  return (
+	return (
 		user ? <Navigate to='/home'/> :
 		<Grid
 			container

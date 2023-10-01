@@ -17,10 +17,30 @@ const firebaseConfig = {
 	measurementId: "G-KG0P8YDZM6"
 };
 
-// Initialize Firebase
+/**
+ * The Firebase app instance that is initialized with the provided configuration.
+ *
+ * @type {import("firebase/app").App}
+ */
 const app = initializeApp(firebaseConfig);
 
+/**
+ * Firebase analytics instance for tracking user interactions.
+ *
+ * @type {import("firebase/analytics").Analytics}
+ */
 export const analytics = getAnalytics(app);
+
+/**
+ * Firebase authentication instance for user authentication.
+ *
+ * @type {import("firebase/auth").Auth}
+ */
 export const auth = getAuth(app);
+
+/**
+ * Firebase Firestore instance for accessing the Firestore database.
+ *
+ * @type {import("firebase/firestore").Firestore}
+ */
 export const db = getFirestore(app);
-export default app;

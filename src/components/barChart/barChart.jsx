@@ -11,6 +11,17 @@ import { Card } from '@mui/material';
 
 import './barChart.css';
 
+/**
+ * A bar chart component that displays data using D3.js.
+ *
+ * @component
+ * @param {object} props - The props for the component.
+ * @param {Array} props.data - The data to be displayed in the bar chart.
+ * @param {number} props.width - The width of the chart.
+ * @param {number} props.height - The height of the chart.
+ * @param {string} props.property - The property of data to be used for bar heights and colors.
+ * @returns {JSX.Element} The rendered React component.
+ */
 function BarChart({ data, width, height, property }) {
   const svgRef = useRef();
   
@@ -75,12 +86,7 @@ function BarChart({ data, width, height, property }) {
     
     const tooltip = select('.tooltip')
       .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "10px");
+      .attr("class", "tooltip");
     
     const mouseover = (event) => {
       const datum = event.explicitOriginalTarget.__data__;

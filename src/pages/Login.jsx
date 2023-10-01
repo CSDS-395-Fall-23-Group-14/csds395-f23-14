@@ -14,10 +14,22 @@ import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * The Login component for user authentication.
+ *
+ * @component
+ */
 function Login() {
 	const { genericLogin, googleLogin, user } = useAuth();
 	const [isWrongPass, setIsWrongPass] = useState(false);
 	
+	/**
+	 * Handles Google login button click event.
+	 * Calls the Google login function and handles any errors.
+	 *
+	 * @async
+	 * @function
+	 */
 	const handleGoogleLogin = async () => {
 		try {
 			await googleLogin();
@@ -26,6 +38,16 @@ function Login() {
 		}
 	};
 	
+	
+	/**
+	 * Handles the generic login form submission.
+	 * Calls the generic login function with user-provided email and password.
+	 * Sets the "isWrongPass" state if login fails.
+	 *
+	 * @async
+	 * @function
+	 * @param {Event} event - The form submission event.
+	 */
 	const handleGenericLogin = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
