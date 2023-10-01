@@ -26,6 +26,63 @@
 .barCharts {
     display: flex;
     inset: 10px;
-    flex-direction: rows;
+    flex-direction: row;
     flex-wrap: wrap;
+}
+.start-btn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    display: block;
+    line-height: 1em;
+    max-height: 2.5em;
+}
+
+.screener-filter-text {
+    font-size: 18px;
+    padding-right: 4px;
+}
+
+.screener-filter-menu {
+    display: flex;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 50%;
+    transform: translate(-50%,-50%);
+    border: solid black 2px;
+    background-color: #ffffff;
+    flex-direction: row;
+    border-radius: 5px;
+}
+
+.screener-filter-cat {
+    display: flex;
+    align-items: center;
+}
+
+.screener-filter-text {
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    margin: 14px 14px 14px 14px;
+    line-height: 24.5px;
+    letter-spacing: 0.39998px;
+    word-wrap: break-word;
+    font-weight: 400;
+}
+
+.stock-screen-sm-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    padding-top: 2px;
+}
+
+#stock-screen-cell {
+    display: flex;
+}
+
+.stock-screen-cell-class {
+    flex-direction: row;
+    align-items: center;    
+    justify-content: center;
 }
