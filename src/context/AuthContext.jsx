@@ -88,6 +88,7 @@ function AuthContextProvider({ children }) {
  * @property {function} googleLogin - Function to log in a user with Google authentication.
  * @property {function} logOut - Function to log out the current user.
  * @property {function} updateUserProfile - Function to update the current user's profile.
+ * @property {function} updateUserProfile - Function to update the current user's profile.
  * @property {object} user - The current authenticated user object.
  */
 const useAuth = () => {
