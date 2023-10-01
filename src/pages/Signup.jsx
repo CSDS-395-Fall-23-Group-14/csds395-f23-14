@@ -13,8 +13,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
-import { addDoc, collection } from "firebase/firestore";
-import { db } from '../../src/firebaseConfig';
 
 /**
  * The SignUp component for user registration.
@@ -22,7 +20,7 @@ import { db } from '../../src/firebaseConfig';
  * @component
  */
 function SignUp() {
-	const { createUser, googleLogin, updateUserProfile, user } = useAuth();
+	const { createUser, googleLogin, user } = useAuth();
 	const [error, setError] = useState(null);
 	
 	/**
@@ -53,18 +51,13 @@ function SignUp() {
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		const firstName = data.get('first_name');
+		const lastName = data.get('last_name');
 		const email = data.get('email');
 		const password = data.get('password');
 		
 		try {
-			await createUser(email, password)
-			.then(() => {
-				updateUserProfile({ displayName: data.get('email').split("@")[0] });
-				addDoc(collection(db, "users"), { // TODO: make our own hook for this to simplify the code
-					first_name: data.get('first_name'), last_name: data.get('last_name')
-				})
-			});
-		
+			createUser(firstName, lastName, email, password);
 		} catch (error) {
 			switch (error.code) {
 				case 'auth/email-already-in-use':

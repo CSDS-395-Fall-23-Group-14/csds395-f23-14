@@ -8,7 +8,8 @@ import {
 	onAuthStateChanged,
 	updateProfile,
 } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from '../firebaseConfig';
 
 // Create a context for managing authentication.
 const AuthContext = createContext();
@@ -31,7 +32,16 @@ function AuthContextProvider({ children }) {
 	 * @param {string} password - The user's password.
 	 * @returns {Promise} A promise that resolves when the user account is created.
 	 */
-	const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+	const createUser = (firstName, lastName, email, password) => {
+		createUserWithEmailAndPassword(auth, email, password)
+		.then((user) => {
+			updateProfile(user.user, { displayName: email.split("@")[0] });
+			addDoc(collection(db, "users"), { // TODO: make our own hook for this to simplify the code
+				first_name: firstName,
+				last_name: lastName
+			})
+		});
+	};
 	
 	/**
 	 * Logs in a user with the provided email and password.
