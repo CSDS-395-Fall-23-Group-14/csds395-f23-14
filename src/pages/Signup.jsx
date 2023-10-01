@@ -13,7 +13,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
-import { updateProfile } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from '../../src/firebaseConfig';
 
@@ -23,7 +22,7 @@ import { db } from '../../src/firebaseConfig';
  * @component
  */
 function SignUp() {
-	const { createUser, googleLogin, user } = useAuth();
+	const { createUser, googleLogin, updateUserProfile, user } = useAuth();
 	const [error, setError] = useState(null);
 	
 	/**
@@ -54,15 +53,14 @@ function SignUp() {
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		const email = data.get('email');
+		const password = data.get('password');
 		
 		try {
-			await createUser(data.get('email'), data.get('password'))
-			.then((user) => {
-				const displayName = user.user.email.split("@")[0];
-				updateProfile(user.user, {
-					displayName: displayName
-				});
-				addDoc(collection(db, "users"), {
+			await createUser(email, password)
+			.then(() => {
+				updateUserProfile({ displayName: data.get('email').split("@")[0] });
+				addDoc(collection(db, "users"), { // TODO: make our own hook for this to simplify the code
 					first_name: data.get('first_name'), last_name: data.get('last_name')
 				})
 			});
