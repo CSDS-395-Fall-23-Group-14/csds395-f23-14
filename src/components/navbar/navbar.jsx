@@ -48,7 +48,9 @@ export default function Navbar() {
                         <PersonIcon fontSize="large"/>
                     </IconButton>
                 </div>
-                <Button sx={{borderColor: "gray", color: "gray", '&:hover': {backgroundColor: "white", color: "gray"}, boxShadow: "none", border: "1px solid",backgroundColor: "white"}} variant="contained">Get Started</Button>
+                <div>
+                    <Button className="start-btn" sx={{borderColor: "gray", color: "gray", '&:hover': {backgroundColor: "white", color: "gray"}, boxShadow: "none", border: "1px solid",backgroundColor: "white"}} variant="contained">Get Started</Button>
+                </div>
             </div>
         </div>
     );
