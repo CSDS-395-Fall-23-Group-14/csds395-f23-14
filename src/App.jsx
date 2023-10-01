@@ -2,6 +2,7 @@ import './App.css';
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import AuthContextProvider from './context/AuthContext';
+import DataContextProvider from './context/DataContext';
 import Protected from './components/protected';
 
 /* Pages */
@@ -11,7 +12,7 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <>
+    <DataContextProvider>
       <AuthContextProvider>
         <Routes>
           {/* Login Page */}
@@ -46,7 +47,7 @@ function App() {
           
         </Routes>
       </AuthContextProvider>
-    </>
+    </DataContextProvider>
   );
 }
 

@@ -8,8 +8,8 @@ import {
 	onAuthStateChanged,
 	updateProfile,
 } from 'firebase/auth';
-import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from '../firebaseConfig';
+import { auth } from '../firebaseConfig';
+import { useDB } from './DataContext';
 
 // Create a context for managing authentication.
 const AuthContext = createContext();
@@ -24,6 +24,7 @@ const AuthContext = createContext();
  */
 function AuthContextProvider({ children }) {
 	const [user, setUser] = useState(null);
+	const { addUser } = useDB();
 	
 	/**
 	 * Creates a new user account with the provided email and password.
@@ -36,10 +37,7 @@ function AuthContextProvider({ children }) {
 		createUserWithEmailAndPassword(auth, email, password)
 		.then((user) => {
 			updateProfile(user.user, { displayName: email.split("@")[0] });
-			addDoc(collection(db, "users"), { // TODO: make our own hook for this to simplify the code
-				first_name: firstName,
-				last_name: lastName
-			})
+			addUser(firstName, lastName);
 		});
 	};
 	
