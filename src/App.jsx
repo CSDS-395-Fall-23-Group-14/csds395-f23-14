@@ -9,6 +9,7 @@ import Protected from './components/protected';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -25,6 +26,16 @@ function App() {
           <Route
             path='/signup'
             element={<Signup />}
+          />
+          
+          {/* Profile Page - Password protected */}
+          <Route
+            path='/profile'
+            element={
+              <Protected>
+                <Profile />
+              </Protected>
+            }
           />
           
           {/* Home Page - Password protected */}

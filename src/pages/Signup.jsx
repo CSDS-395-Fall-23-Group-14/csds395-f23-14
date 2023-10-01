@@ -18,6 +18,7 @@ import { useAuth } from '../context/AuthContext';
  * The SignUp component for user registration.
  *
  * @component
+ * @returns {JSX.Element} The rendered React component.
  */
 function SignUp() {
 	const { createUser, googleLogin, user } = useAuth();
