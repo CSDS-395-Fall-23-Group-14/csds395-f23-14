@@ -1,13 +1,13 @@
 import * as React from 'react';
 import "./stock-screener.css";
-import {Box, alpha, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, FormControlLabel, Switch, Menu, MenuItem, Button} from '@mui/material/';
+import {Box, alpha, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, FormControlLabel, Switch} from '@mui/material/';
 import PropTypes from 'prop-types';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Popup from 'reactjs-popup';
 import BarChart from '../barChart/barChart';
+
 
 function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, mkt_cap, pe, eps, employees, sector) {
     return {
@@ -231,14 +231,6 @@ rowCount: PropTypes.number.isRequired,
 //Filter Logic
 function EnhancedTableToolbar(props) {
 
-    const [anchorElDropdown, setAnchorElDropdown] = React.useState(null);
-    const open = Boolean(anchorElDropdown);
-    const handleDropdownClick = (dropDownevent) => {
-        setAnchorElDropdown(dropDownevent.currentTarget);
-    };
-    const handleDropdownClose = () => {
-        setAnchorElDropdown(null);
-    };    
 const { numSelected } = props;
 
     return (
@@ -270,179 +262,8 @@ const { numSelected } = props;
             >
             </Typography>
         )}
-            <Popup closeOnDocumentClick = {false} trigger={<IconButton>
                 <p className='screener-filter-text'>Filter</p>
                 <FilterListIcon />
-                </IconButton>}>
-                <div className="screener-filter-menu">
-                    <div className='screener-filter-menu-left'>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Price to Earnings Ratio (TTM)</p>
-                        </div>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Return on Assets (TTM)</p>
-                        </div>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Debt to Equity Ratio (MRQ)</p>
-                        </div>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Quick Ratio (MRQ)</p>
-                        </div>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Price to Book (FY)</p>
-                        </div>
-                        <div className='screener-filter-cat'>
-                            <p className='screener-filter-text'>Operating Margin (TTM)</p>
-                        </div>
-                    </div>
-                    <div className='screener-filter-menu-right'>
-                        <div className='screener-filter-menu-btn'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleDropdownClick}
-                            >
-                                <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorElDropdown={anchorElDropdown}
-                                open={open}
-                                onClose={handleDropdownClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                        <div className='screener-filter-menu-btn'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleDropdownClick}
-                            >
-                                <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorElDropdown={anchorElDropdown}
-                                open={open}
-                                onClose={handleDropdownClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                        <div className='screener-filter-menu-btn'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleDropdownClick}
-                            >
-                                <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorElDropdown={anchorElDropdown}
-                                open={open}
-                                onClose={handleDropdownClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                        <div className='screener-filter-menu-btn'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleDropdownClick}
-                            >
-                                <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorElDropdown={anchorElDropdown}
-                                open={open}
-                                onClose={handleDropdownClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                        <div className='screener-filter-menu-btn'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleDropdownClick}
-                            >
-                                <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorElDropdown={anchorElDropdown}
-                                open={open}
-                                onClose={handleDropdownClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                        <div className='screener-filter-menu-btn'>
-                                <Button
-                                    id="basic-button"
-                                    aria-controls={open ? 'basic-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={open ? 'true' : undefined}
-                                    onClick={handleDropdownClick}
-                                >
-                                    <p>Below <KeyboardArrowDownIcon style={{verticalAlign: 'bottom', fontSize: 'xlarge'}} ></KeyboardArrowDownIcon></p>
-                                </Button>
-                                <Menu
-                                    id="basic-menu"
-                                    anchorElDropdown={anchorElDropdown}
-                                    open={open}
-                                    onClose={handleDropdownClose}
-                                    MenuListProps={{
-                                    'aria-labelledby': 'basic-button',
-                                    }}
-                                >
-                                    <MenuItem onClick={handleDropdownClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleDropdownClose}>My account</MenuItem>
-                                    <MenuItem onClick={handleDropdownClose}>Logout</MenuItem>
-                                </Menu>
-                            </div>
-                    </div>
-                </div>
-            </Popup>
         </Toolbar>
     );
 }
@@ -573,7 +394,7 @@ function EnhancedTable() {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell className="stock-screen-cell-class" id="stock-screen-cell" align="center">{row.price} <p className='stock-screen-sm-text'>&nbsp;USD</p></TableCell>
+                      <TableCell className="stock-screen-cell-class" id="stock-screen-cell" align="center"><h3 style={{fontFamily:"'Roboto', 'Helvetica', 'Arial', sans-serif", fontWeight:"400", fontSize:'14px'}}>{row.price}</h3> <p className='stock-screen-sm-text'>&nbsp;USD</p></TableCell>
                       <TableCell align="center">{checkPercent(row.chg_percent)}</TableCell>
                       <TableCell className="stock-screen-cell-class" id="stock-screen-cell" align="center">{checkChange(row.chg)}<p className='stock-screen-sm-text'>&nbsp;USD</p></TableCell>
                       <TableCell align="center">{checkRating(row.tech_rating)} {row.tech_rating}</TableCell>
