@@ -36,8 +36,9 @@ function AuthContextProvider({ children }) {
 	const createUser = (firstName, lastName, email, password) => {
 		createUserWithEmailAndPassword(auth, email, password)
 		.then((user) => {
+			console.log(user.user);
 			updateProfile(user.user, { displayName: email.split("@")[0] });
-			addUser(firstName, lastName);
+			addUser(user.user.uid, firstName, lastName);
 		});
 	};
 	

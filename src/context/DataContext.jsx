@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, setDoc, collection, doc } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 // Create a context for managing queries and posts to the database.
@@ -21,12 +21,13 @@ function DataContextProvider({ children }) {
 	 * @param {String} lastName The last name of the user.
 	 * @returns {Promise} A promise that resolves when the document is posted.
 	 */
-	const addUser = (firstName, lastName) =>
-			addDoc(collection(db, "users"), {
+	const addUser = (uid, firstName, lastName) =>
+			setDoc(doc(db, "users", uid), {
 				first_name: firstName,
 				last_name: lastName
-			});
+			  });
 
+			  
 	return (
 		<DataContext.Provider value={{
 			addUser
