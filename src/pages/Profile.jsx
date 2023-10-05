@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
 	Button,
@@ -11,6 +11,7 @@ import {
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
+import { useDB } from '../context/DataContext';
 
 /**
  * The Profile component for displaying and editing user data.
@@ -20,7 +21,22 @@ import { useAuth } from '../context/AuthContext';
  */
 function Profile() {
   const { user } = useAuth();
+  const { updateUserProfile, getUserProfile } = useDB();
 	const [error, setError] = useState(null);
+  const [profile, setProfile] = useState(null);
+
+  
+
+
+  useEffect(() => {
+    if (user) {
+      getUserProfile(user.uid)
+        .then((data) => {
+          setProfile(data)
+        })
+    }
+  }, [user]);
+
   /**
 	 * Handles the generic signup form submission.
 	 * Calls the createUser function with user-provided email and password.
@@ -36,16 +52,18 @@ function Profile() {
 		const data = new FormData(event.currentTarget);
 		const firstName = data.get('first_name');
 		const lastName = data.get('last_name');
+    
+
 		
 		try {
-			//updateUser(firstName, lastName, email, password);
+			updateUserProfile(user.uid, firstName, lastName);
 		} catch (error) {
 			  console.error(error);
 		}
 	};
 
   return (
-		user ? <Navigate to='/home'/> :
+    user && profile ?
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -76,29 +94,22 @@ function Profile() {
 						onSubmit={handleProfileUpdate}
 						sx={{ alignItems:'center' }}
 					>
-						{error ? <Alert severity="error">{error}</Alert> : null}
 						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
 							<TextField
 								margin='normal'
 								label='First Name'
 								name='first_name'
 								type='first_name'
+                defaultValue={profile.first_name}
 							/>
 							<TextField
 								margin='normal'
 								label='Last Name'
 								name='last_name'
 								type='last_name'
+                defaultValue={profile.last_name}
 							/>
 						</Box>
-						<TextField
-							margin='normal'
-							label='Email Address'
-							name='email'
-							type='email'
-              disabled
-							fullWidth
-						/>
 						<Button
 							margin='normal'
 							type='submit'
@@ -112,6 +123,7 @@ function Profile() {
 				</Box>
 			</Grid>
 		</Grid>
+    : <></>
   )
 }
 

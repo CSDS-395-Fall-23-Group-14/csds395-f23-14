@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { addDoc, setDoc, collection, doc } from "firebase/firestore";
+import { addDoc, setDoc, collection, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 // Create a context for managing queries and posts to the database.
@@ -27,10 +27,21 @@ function DataContextProvider({ children }) {
 				last_name: lastName
 			  });
 
-			  
+    const updateUserProfile = (uid, firstName, lastName) =>
+			updateDoc(doc(db, "users", uid), {
+				first_name: firstName,
+				last_name: lastName
+			});
+
+	const getUserProfile = (uid) => {
+		console.log("attempt get user");
+		
+		return getDoc(doc(db, "users", uid)).then((res) => res.data());
+	}
+
 	return (
 		<DataContext.Provider value={{
-			addUser
+			addUser, updateUserProfile, getUserProfile
 		}}>
 			{children}
 		</DataContext.Provider>
