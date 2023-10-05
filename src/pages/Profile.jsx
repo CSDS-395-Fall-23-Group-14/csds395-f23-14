@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import MenuItem from '@mui/material/MenuItem';
 import {
 	Button,
 	TextField,
 	Box,
 	Grid,
-	Alert
 } from '@mui/material';
 
 import logo from '../images/EZ$-logo-transparent.png';
@@ -24,9 +23,11 @@ function Profile() {
   const { updateUserProfile, getUserProfile } = useDB();
 	const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
-
-  
-
+  const porfolio = [
+    { value: "1", label: 'Conservative' },
+    { value: "2", label: 'Moderate' },
+    { value: "3", label: 'Growth' },
+  ];
 
   useEffect(() => {
     if (user) {
@@ -50,20 +51,23 @@ function Profile() {
 	const handleProfileUpdate = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		const firstName = data.get('first_name');
-		const lastName = data.get('last_name');
-    
-
+    const p = {
+      firstName: data.get('first_name'),
+      lastName: data.get('last_name'),
+      job: data.get('job'),
+      organization: data.get('organization'),
+      porfolio: data.get('porfolio'),
+    }
 		
 		try {
-			updateUserProfile(user.uid, firstName, lastName);
+			updateUserProfile(user.uid, p.firstName, p.lastName, p.job, p.organization, p.porfolio);
 		} catch (error) {
 			  console.error(error);
 		}
 	};
 
   return (
-    user && profile ?
+    user && profile ? 
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -99,17 +103,59 @@ function Profile() {
 								margin='normal'
 								label='First Name'
 								name='first_name'
-								type='first_name'
+								type='type'
                 defaultValue={profile.first_name}
 							/>
 							<TextField
 								margin='normal'
 								label='Last Name'
 								name='last_name'
-								type='last_name'
+								type='text'
                 defaultValue={profile.last_name}
 							/>
 						</Box>
+            <TextField
+								margin='normal'
+								label='Job'
+								name='job'
+								type='text'
+                defaultValue={profile.job}
+                fullWidth
+						  />
+            <TextField
+              margin='normal'
+              label='Organization'
+              name='organization'
+              type='text'
+              defaultValue={profile.organization}
+              fullWidth
+            />
+            <TextField
+              margin='normal'
+              name="year-investing"
+              id="outlined-number"
+              label="Years of Investing"
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              fullWidth
+            />
+            <TextField
+              name="porfolio"
+              margin='normal'
+              fullWidth
+              select
+              label="Porfolio"
+              defaultValue={profile.porfolio}
+              helperText="Please select your investment porfolio"
+            >
+              {porfolio.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
 						<Button
 							margin='normal'
 							type='submit'

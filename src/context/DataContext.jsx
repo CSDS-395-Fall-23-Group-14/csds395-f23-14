@@ -27,15 +27,16 @@ function DataContextProvider({ children }) {
 				last_name: lastName
 			  });
 
-    const updateUserProfile = (uid, firstName, lastName) =>
+    const updateUserProfile = (uid, firstName, lastName, job, organization, porfolio) =>
 			updateDoc(doc(db, "users", uid), {
 				first_name: firstName,
-				last_name: lastName
+				last_name: lastName,
+				job: job,
+				organization: organization,
+				porfolio: porfolio,
 			});
 
 	const getUserProfile = (uid) => {
-		console.log("attempt get user");
-		
 		return getDoc(doc(db, "users", uid)).then((res) => res.data());
 	}
 
