@@ -31,12 +31,9 @@ export default function Navbar() {
 						<TabContext>
 							<Box sx={{border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
 								<Tabs variant="scrollable">
-									<Tab label='Products'/>
-									<Tab label='Community'/>
-									<Tab label='Markets'/>
-									<Tab label='News'/>
-									<Tab label='Brokers'/>
-									<Tab label='More'/>
+									<Tab label='Home' onClick={() => navigate('/')}/>
+									<Tab label='Options' onClick={() => navigate('/optionscreener')}/>
+									<Tab label='Tiles'onClick={() => navigate('/tiles')}/>
 								</Tabs>
 							</Box>
 						</TabContext>

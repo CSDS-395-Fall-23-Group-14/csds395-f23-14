@@ -1,17 +1,17 @@
-import React from 'react';
+import React from 'react'
 import { useAuth } from '../context/AuthContext';
 import { Button } from '@mui/material';
 import Navbar from '../components/navbar/navbar';
-import EnhancedTable from '../components/stock-screener/stock-screener';
 
 /**
- * Option Screener page that will allow users to choose options and integrate with finding hedges on Tiles
- *
+ * The Tiles component for displaying and editing user data.
+ * 
  * @component
+ * @returns {JSX.Element} The rendered React component.
  */
-function OptionScreener() {
+function Tiles() {
   const { logOut } = useAuth();
-  
+
   /**
    * Handles the logout button click event.
    * Calls the logout function and handles any errors.
@@ -22,11 +22,11 @@ function OptionScreener() {
   const handleLogOut = async () => {
     try {
       await logOut();
-    } catch(error) {
+    } catch (error) {
       console.error(error);
     }
   }
-  
+
   return (
     <>
       <Button
@@ -34,15 +34,12 @@ function OptionScreener() {
         onClick={handleLogOut}>
         Log Out
       </Button>
-      
+
       <div className='header'>
         <Navbar />
       </div>
-      <div className='body'>
-        <EnhancedTable/>
-      </div>
-    </>
-  );
+      <div>Tiles</div>
+    </>)
 }
 
-export default OptionScreener;
+export default Tiles;
