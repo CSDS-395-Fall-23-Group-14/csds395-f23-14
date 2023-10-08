@@ -68,7 +68,7 @@ function DataContextProvider({ children }) {
 
 	/**
 	 * Fetches the first 25 options from the db
-	 * @returns the first 25 options from the db
+	 * @returns the first 25 options as an array
 	 */
 	const get25Options = () => {
 		const q = query(collection(db, 'options'), limit(25));
