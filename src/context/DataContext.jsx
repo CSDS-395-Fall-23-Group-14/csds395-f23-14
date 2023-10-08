@@ -36,8 +36,8 @@ function DataContextProvider({ children }) {
 	 * 
 	 * Returns an array with the data
 	 */
-	const getAllStocks = () => {
-		const snapshot = getDocs(collection(db, 'stocks'));
+	const getAllStocks = async () => {
+		const snapshot = await getDocs(collection(db, 'stocks'));
 		return snapshot.docs.map(stock => stock.data());
 	}
 
@@ -51,8 +51,8 @@ function DataContextProvider({ children }) {
 	 * 
 	 * Returns an array with the data
 	 */
-	const getAllOptions = () => {
-		const snapshot = getDocs(collection(db, 'options'));
+	const getAllOptions = async () => {
+		const snapshot = await getDocs(collection(db, 'options'));
 		return snapshot.docs.map(option => option.data());
 	}
 
@@ -60,9 +60,9 @@ function DataContextProvider({ children }) {
 	 * Fetches first 25 stocks from the db
 	 * @returns the first 25 stocks as an array
 	 */
-	const get25Stocks = () => {
+	const get25Stocks = async () => {
 		const q = query(collection(db, 'stocks'), limit(25));
-		const snapshot = getDocs(q);
+		const snapshot = await getDocs(q);
 		return snapshot.docs.map(stock => stock.data());
 	}
 
@@ -70,9 +70,9 @@ function DataContextProvider({ children }) {
 	 * Fetches the first 25 options from the db
 	 * @returns the first 25 options as an array
 	 */
-	const get25Options = () => {
+	const get25Options = async () => {
 		const q = query(collection(db, 'options'), limit(25));
-		const snapshot = getDocs(q);
+		const snapshot = await getDocs(q);
 		return snapshot.docs.map(option => option.data());
 	}
 
