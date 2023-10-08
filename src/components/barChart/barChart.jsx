@@ -85,7 +85,7 @@ function BarChart({ data, width, height, property }) {
 			.attr('fill', (datum) => scaleCol(datum[property]));
 		
 		const mouseover = (event) => {
-			const datum = event.explicitOriginalTarget.__data__;
+			const datum = event.target.__data__;
 			const [x, y] = pointer(event);
 			select('.tooltip')
 				.style('left', `${x + 20 + container.offsetLeft}px`)

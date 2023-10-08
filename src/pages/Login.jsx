@@ -18,6 +18,7 @@ import { useAuth } from '../context/AuthContext';
  * The Login component for user authentication.
  *
  * @component
+ * @returns {JSX.Element} The rendered React component.
  */
 function Login() {
 	const { genericLogin, googleLogin, user } = useAuth();
@@ -37,7 +38,6 @@ function Login() {
 			console.log(error);
 		}
 	};
-	
 	
 	/**
 	 * Handles the generic login form submission.

@@ -13,14 +13,12 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
-import { updateProfile } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from '../../src/firebaseConfig';
 
 /**
  * The SignUp component for user registration.
  *
  * @component
+ * @returns {JSX.Element} The rendered React component.
  */
 function SignUp() {
 	const { createUser, googleLogin, user } = useAuth();
@@ -54,19 +52,13 @@ function SignUp() {
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		const firstName = data.get('first_name');
+		const lastName = data.get('last_name');
+		const email = data.get('email');
+		const password = data.get('password');
 		
 		try {
-			await createUser(data.get('email'), data.get('password'))
-			.then((user) => {
-				const displayName = user.user.email.split("@")[0];
-				updateProfile(user.user, {
-					displayName: displayName
-				});
-				addDoc(collection(db, "users"), {
-					first_name: data.get('first_name'), last_name: data.get('last_name')
-				})
-			});
-		
+			createUser(firstName, lastName, email, password);
 		} catch (error) {
 			switch (error.code) {
 				case 'auth/email-already-in-use':

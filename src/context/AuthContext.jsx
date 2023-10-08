@@ -9,6 +9,7 @@ import {
 	updateProfile,
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import { useDB } from './DataContext';
 
 // Create a context for managing authentication.
 const AuthContext = createContext();
@@ -23,6 +24,7 @@ const AuthContext = createContext();
  */
 function AuthContextProvider({ children }) {
 	const [user, setUser] = useState(null);
+	const { addUser } = useDB();
 	
 	/**
 	 * Creates a new user account with the provided email and password.
@@ -31,7 +33,13 @@ function AuthContextProvider({ children }) {
 	 * @param {string} password - The user's password.
 	 * @returns {Promise} A promise that resolves when the user account is created.
 	 */
-	const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+	const createUser = (firstName, lastName, email, password) => {
+		createUserWithEmailAndPassword(auth, email, password)
+		.then((user) => {
+			updateProfile(user.user, { displayName: email.split("@")[0] });
+			addUser(firstName, lastName);
+		});
+	};
 	
 	/**
 	 * Logs in a user with the provided email and password.
@@ -55,18 +63,24 @@ function AuthContextProvider({ children }) {
 	 */
 	const logOut = () => signOut(auth);
 	
+	/**
+	 * Updates the profile of the currently authenticated user.
+	 * 
+	 * @param {object} profile - The profile's `displayName` and `photoURL` to update.
+	 * @param {string} profile.displayName
+	 * @param {string} profile.photoURL
+	 */
+	const updateUserProfile = (profile) => updateProfile(user, profile);
+	
 	useEffect(() => {
-		/**
-		 * Sets up a listener for changes in the user's authentication state.
-		 *
-		 * @param {object} currentUser - The user object representing the current authenticated user.
-		 */
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {console.log(currentUser); setUser(currentUser)});
 		return () => unsubscribe();
 	}, []);
 	
 	return (
-		<AuthContext.Provider value={{ createUser, genericLogin, googleLogin, logOut, user }}>
+		<AuthContext.Provider value={{
+			createUser, genericLogin, googleLogin, logOut, updateUserProfile, user
+		}}>
 			{children}
 		</AuthContext.Provider>
 	);
@@ -81,6 +95,8 @@ function AuthContextProvider({ children }) {
  * @property {function} genericLogin - Function to log in a user with email and password.
  * @property {function} googleLogin - Function to log in a user with Google authentication.
  * @property {function} logOut - Function to log out the current user.
+ * @property {function} updateUserProfile - Function to update the current user's profile.
+ * @property {function} updateUserProfile - Function to update the current user's profile.
  * @property {object} user - The current authenticated user object.
  */
 const useAuth = () => {
