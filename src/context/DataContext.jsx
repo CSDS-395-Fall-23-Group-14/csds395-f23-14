@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { addDoc, setDoc, collection, doc, updateDoc, getDoc } from "firebase/firestore";
+import { addDoc, collection, query, getDoc, getDocs, limit, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 // Create a context for managing queries and posts to the database.
@@ -36,17 +36,67 @@ function DataContextProvider({ children }) {
 				porfolio: porfolio,
 			});
 
+	/**
+	 * Gets all stocks from db
+	 * *******************
+	 * We shouldn't really use this bc 50,000 doc read limit per day.
+	 * Only about 25 calls of this function allowed per day
+	 * ************************************************
+	 * 
+	 * Returns an array with the data
+	 */
+	const getAllStocks = async () => {
+		const snapshot = await getDocs(collection(db, 'stocks'));
+		return snapshot.docs.map(stock => stock.data());
+	}
+
+	/**
+	 * Gets all stocks from db
+	 * *******************
+	 * We shouldn't really use this bc 50,000 doc read limit per day.
+	 * Only about 25 calls of this function allowed per day
+	 * This one is less risky than the stocks getAll
+	 * ************************************************
+	 * 
+	 * Returns an array with the data
+	 */
+	const getAllOptions = async () => {
+		const snapshot = await getDocs(collection(db, 'options'));
+		return snapshot.docs.map(option => option.data());
+	}
+
+	/**
+	 * Fetches first 25 stocks from the db
+	 * @returns the first 25 stocks as an array
+	 */
+	const get25Stocks = async () => {
+		const q = query(collection(db, 'stocks'), limit(25));
+		const snapshot = await getDocs(q);
+		return snapshot.docs.map(stock => stock.data());
+	}
+
+	/**
+	 * Fetches the first 25 options from the db
+	 * @returns the first 25 options as an array
+	 */
+	const get25Options = async () => {
+		const q = query(collection(db, 'options'), limit(25));
+		const snapshot = await getDocs(q);
+		return snapshot.docs.map(option => option.data());
+	}
+
 	const getUserProfile = (uid) => {
 		return getDoc(doc(db, "users", uid)).then((res) => res.data());
 	}
 
 	return (
 		<DataContext.Provider value={{
-			addUser, updateUserProfile, getUserProfile
+			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks, updateUserProfile, getUserProfile
 		}}>
 			{children}
 		</DataContext.Provider>
 	);
+
 }
 
 /**
