@@ -27,11 +27,12 @@ function DataContextProvider({ children }) {
 				last_name: lastName
 			  });
 
-    const updateUserProfile = (uid, firstName, lastName, job, organization, porfolio) =>
+    const updateUserProfile = (uid, firstName, lastName, job, yearInvesting, organization, porfolio) =>
 			updateDoc(doc(db, "users", uid), {
 				first_name: firstName,
 				last_name: lastName,
 				job: job,
+				yearInvesting: yearInvesting,
 				organization: organization,
 				porfolio: porfolio,
 			});
