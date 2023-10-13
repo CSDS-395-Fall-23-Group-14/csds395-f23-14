@@ -7,6 +7,9 @@ import { visuallyHidden } from '@mui/utils';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import BarChart from '../barChart/barChart';
+import { useDB } from '../../context/DataContext.jsx'; // include const { get25Stocks } = useDB(); where you need to get data then call asyc get25Stocks() function.
+
+
 
 
 function createData(name, price, chg_percent, chg, tech_rating, vol, vol_price, mkt_cap, pe, eps, employees, sector) {
@@ -173,6 +176,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
+
 const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
 const createSortHandler = (property) => (event) => {
@@ -232,6 +236,7 @@ rowCount: PropTypes.number.isRequired,
 function EnhancedTableToolbar(props) {
 
 const { numSelected } = props;
+
 
     return (
         <Toolbar
