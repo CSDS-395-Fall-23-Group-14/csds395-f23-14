@@ -1,12 +1,16 @@
 import * as React from 'react';
 import "./stock-screener.css";
-import {Box, alpha, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, FormControlLabel, Switch} from '@mui/material/';
+import {Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper, Checkbox, FormControlLabel, Switch} from '@mui/material/';
 import PropTypes from 'prop-types';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import BarChart from '../barChart/barChart';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import { useDB } from '../../context/DataContext.jsx'; // include const { get25Stocks } = useDB(); where you need to get data then call asyc get25Stocks() function.
 
 
@@ -237,7 +241,6 @@ function EnhancedTableToolbar(props) {
 
 const { numSelected } = props;
 
-
     return (
         <Toolbar
         sx={{
@@ -347,12 +350,42 @@ function EnhancedTable() {
         ),
       [order, orderBy, page, rowsPerPage],
     );
+
+	function FilterMenu() {
+		const [show, setShow] = React.useState(false);
+		const handleShow = () => {
+		  setShow(!show);
+		};
+
+		return(
+			<div>
+				<Button sx={{borderColor: "gray", color: "gray", '&:hover': {backgroundColor: "white", color: "gray"}, boxShadow: "none", border: "1px solid",backgroundColor: "white"}} variant="contained" onClick={handleShow} >Filter<FilterListIcon /></Button>
+				{
+					show &&
+					<div className='filterMenu'>
+					<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+						<InputLabel id="demo-simple-select-standard-label">Age</InputLabel>
+						<Select
+							labelId="demo-simple-select-standard-label"
+							id="demo-simple-select-standard"
+							label="Age"
+						>
+							<MenuItem value="">
+							<em>None</em>
+							</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
+				}
+			</div>
+		)
+	}
   
     return (
       <Box sx={{ width: '100%', overflowX: 'visible'}}>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
+		  <FilterMenu></FilterMenu>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
