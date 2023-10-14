@@ -7,6 +7,7 @@ import {
 	Grid,
 	Alert
 } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import logo from '../images/EZ$-logo-transparent.png';
@@ -125,8 +126,12 @@ function Profile() {
 						textAlign: 'center'
 					}}
 				>
-					<img src={logo} height={200} alt='logo' />
-					<h1>User Profile</h1>
+					
+					<Avatar
+						alt="avatar"
+						src="https://media.gcflearnfree.org/ctassets/topics/246/share_size_medium.jpg"
+						sx={{ width: 200, height: 200, marginBottom: 3 }}
+					/>
 					<Box
 						component='form'
 						onSubmit={handleProfileUpdate}
