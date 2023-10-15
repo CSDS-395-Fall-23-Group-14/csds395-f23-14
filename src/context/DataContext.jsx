@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { addDoc, collection, query, getDoc, getDocs, limit, setDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, getDoc, getDocs, limit, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 // Create a context for managing queries and posts to the database.
@@ -26,7 +26,7 @@ function DataContextProvider({ children }) {
 			first_name: firstName,
 			last_name: lastName
 			});
-			
+	
 	const getUser = (uid) => getDoc(doc(db, "users", uid));
 	
 	const updateUserProfile = (uid, firstName, lastName, job, yearInvesting, organization, porfolio) =>
@@ -93,22 +93,25 @@ function DataContextProvider({ children }) {
 		return snapshot.docs.map(option => option.data());
 	}
 
-	const getUserProfile = (uid) => {
-		return getDoc(doc(db, "users", uid)).then((res) => res.data());
+	const getUserProfile = async (uid) => {
+		const res = await getDoc(doc(db, "users", uid));
+		return res.data();
 	}
 
 	return (
-		<DataContext.Provider value={{
-			addUser,
-			getUser,
-			get25Stocks,
-			get25Options,
-			getAllOptions,
-			getAllStocks,
-			updateUserProfile,
-			getUserProfile,
-			updateUserProfileAvatar
-		}}>
+		<DataContext.Provider
+			value={{
+				addUser,
+				getUser,
+				get25Stocks,
+				get25Options,
+				getAllOptions,
+				getAllStocks,
+				updateUserProfile,
+				getUserProfile,
+				updateUserProfileAvatar
+			}}
+		>
 			{children}
 		</DataContext.Provider>
 	);

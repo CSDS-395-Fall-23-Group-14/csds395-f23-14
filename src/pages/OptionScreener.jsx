@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
+
 import Navbar from '../components/navbar/navbar';
 import OptionScreener from '../components/option-screener/option-screener';
 
@@ -8,12 +10,24 @@ import OptionScreener from '../components/option-screener/option-screener';
  * @component
  */
 function OptionScreenerPage() {
+  const theme = useTheme();
+  
   return (
     <>
-      <div className='header'>
+      <div
+        className='header'
+        style={{
+          backgroundColor: theme.palette.background.default
+        }}
+      >
         <Navbar />
       </div>
-      <div className='body'>
+      <div
+        className='body'
+        style={{
+          backgroundColor: theme.palette.background.default
+        }}
+      >
         <OptionScreener/>
       </div>
     </>

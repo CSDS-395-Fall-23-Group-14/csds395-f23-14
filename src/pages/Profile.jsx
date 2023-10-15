@@ -141,7 +141,6 @@ function Profile() {
 						textAlign: 'center'
 					}}
 				>
-					
 					<Avatar
 						alt="avatar"
 						src={profile.avatar}
@@ -197,7 +196,7 @@ function Profile() {
 							type='password'
 							fullWidth
 						/>
-            			<TextField
+						<TextField
 							margin='normal'
 							label='Job'
 							name='job'
@@ -206,33 +205,33 @@ function Profile() {
 							fullWidth
 						/>
 						<TextField
-						margin='normal'
-						label='Organization'
-						name='organization'
-						type='text'
-						defaultValue={profile.organization}
-						fullWidth
+							margin='normal'
+							label='Organization'
+							name='organization'
+							type='text'
+							defaultValue={profile.organization}
+							fullWidth
 						/>
 						<TextField
-						margin='normal'
-						name="year_investing"
-						id="outlined-number"
-						label="Years of Investing"
-						type="number"
-						defaultValue={profile.yearInvesting}
-						InputLabelProps={{
-							shrink: true,
-						}}
-						fullWidth
+							margin='normal'
+							name="year_investing"
+							id="outlined-number"
+							label="Years of Investing"
+							type="number"
+							defaultValue={profile.yearInvesting}
+							InputLabelProps={{
+								shrink: true,
+							}}
+							fullWidth
 						/>
 						<TextField
-						name="porfolio"
-						margin='normal'
-						fullWidth
-						select
-						label="Porfolio"
-						defaultValue={profile.porfolio}
-						helperText="Please select your investment porfolio"
+							name="porfolio"
+							margin='normal'
+							fullWidth
+							select
+							label="Porfolio"
+							defaultValue={profile.porfolio}
+							helperText="Please select your investment porfolio"
 						>
 							{porfolio.map((option) => (
 								<MenuItem key={option.value} value={option.value}>

@@ -34,17 +34,14 @@ function AuthContextProvider({ children }) {
 	 * @param {string} password - The user's password.
 	 * @returns {Promise} A promise that resolves when the user account is created.
 	 */
-	const createUser = (firstName, lastName, email, password) => {
-		createUserWithEmailAndPassword(auth, email, password)
+	const createUser = async (firstName, lastName, email, password) =>
+		await createUserWithEmailAndPassword(auth, email, password)
 			.then((user) => {
 				updateProfile(user.user, { displayName: email.split("@")[0] });
 				addUser(user.user.uid, firstName, lastName);
 			});
-	};
 
-	const updateUserPassword = (user, password) => {
-		updatePassword(user, password);
-	}
+	const updateUserPassword = async (user, password) => await updatePassword(user, password);
 
 	/**
 	 * Logs in a user with the provided email and password.
@@ -53,7 +50,7 @@ function AuthContextProvider({ children }) {
 	 * @param {string} password - The user's password.
 	 * @returns {Promise} A promise that resolves when the user is successfully logged in.
 	 */
-	const genericLogin = (email, password) => signInWithEmailAndPassword(auth, email, password);
+	const genericLogin = async (email, password) => await signInWithEmailAndPassword(auth, email, password);
 	
 	/**
 	 * Logs in a user using Google authentication.
@@ -74,7 +71,7 @@ function AuthContextProvider({ children }) {
 	/**
 	 * Logs out the currently authenticated user.
 	 */
-	const logOut = () => signOut(auth);
+	const logOut = async () => await signOut(auth);
 	
 	/**
 	 * Updates the profile of the currently authenticated user.
@@ -83,7 +80,7 @@ function AuthContextProvider({ children }) {
 	 * @param {string} profile.displayName
 	 * @param {string} profile.photoURL
 	 */
-	const updateUserProfile = (profile) => updateProfile(user, profile);
+	const updateUserProfile = async (profile) => await updateProfile(user, profile);
 	
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
@@ -91,9 +88,17 @@ function AuthContextProvider({ children }) {
 	}, []);
 	
 	return (
-		<AuthContext.Provider value={{
-			createUser, genericLogin, googleLogin, logOut, updateUserProfile, user, updateUserPassword
-		}}>
+		<AuthContext.Provider
+			value={{
+				createUser,
+				genericLogin,
+				googleLogin,
+				logOut,
+				updateUserProfile,
+				updateUserPassword,
+				user
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

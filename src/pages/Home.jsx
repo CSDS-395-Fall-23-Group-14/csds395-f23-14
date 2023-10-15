@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material/styles';
+
 import React from 'react';
 import Navbar from '../components/navbar/navbar';
 import StockScreener from '../components/stock-screener/stock-screener';
@@ -9,12 +11,24 @@ import StockScreener from '../components/stock-screener/stock-screener';
  * @returns {JSX.Element} The rendered React component.
  */
 function Home() {
+  const theme = useTheme();
+  
   return (
     <>
-      <div className='header'>
+      <div
+        className='header'
+        style={{
+          backgroundColor: theme.palette.background.default
+        }}
+      >
         <Navbar />
       </div>
-      <div className='body'>
+      <div
+        className='body'
+        style={{
+          backgroundColor: theme.palette.background.default
+        }}
+      >
         <StockScreener/>
       </div>
     </>

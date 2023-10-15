@@ -1,6 +1,5 @@
-
 import React from "react";
-import logo1 from "../../images/EZ$-logo-transparent.png";
+import logo from "../../images/EZ$-logo-transparent.png";
 import "./navbar.css";
 import TextField from '@mui/material/TextField';
 import PersonIcon from '@mui/icons-material/Person';
@@ -10,31 +9,27 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router";
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 export default function Navbar() {
 	const navigate = useNavigate();
   const { logOut } = useAuth();
-  
-  /**
-   * Handles the logout button click event.
-   * Calls the logout function and handles any errors.
-   *
-   * @async
-   * @function
-   */
-  const handleLogOut = async () => {
-    try {
-      await logOut();
-    } catch(error) {
-      console.error(error);
-    }
-  }
+	const { setThemeMode, getThemeMode } = useTheme()
 	
 	return(
 		<div className="wrapper">
 			<div className="navbar-left">
-				<div className="logo-wrapper">
-					<img src={logo1} height={60} alt="logo"></img>
+				<div className="logo-wrapper"> 
+					<img
+						src={logo}
+						height={60}
+						alt="logo"
+						style={{
+							filter: getThemeMode() === "dark" ? 'invert(1)' : ''
+						}}
+					/>
 				</div>
 			</div>
 			<div className="navbar-center">
@@ -58,16 +53,25 @@ export default function Navbar() {
 				</div>
 			</div>
 			<div className="navbar-right">
+				<div className="theme-button">
+					<IconButton sx={{ ml: 1 }} onClick={() => setThemeMode(getThemeMode() === 'dark' ? 'light' : 'dark')}>
+						{getThemeMode() === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+					</IconButton>
+				</div>
+				
 				<div className="user-icon">
 					<IconButton onClick={() => navigate('/profile')}>
 						<PersonIcon fontSize="large"/>
 					</IconButton>
 				</div>
-				<Button
-        	variant="outlined"
-        	onClick={handleLogOut}>
-        	Log Out
-      	</Button>
+				
+				<div className="logout-button">
+					<Button
+						variant="outlined"
+						onClick={() => logOut()}>
+						Log Out
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
