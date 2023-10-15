@@ -34,7 +34,9 @@ function App() {
           <Route
             path='/profile'
             element={
-              <Profile />
+              <Protected>
+                <Profile />
+              </Protected>
             }
           />
 
@@ -48,11 +50,13 @@ function App() {
             }
           />
 
-          {/* Tiles */}
+          {/* Tiles - Password protected */}
           <Route
             path='/tiles'
             element={
-              <Tiles />
+              <Protected>
+                <Tiles />
+              </Protected>
             }
           />
 
