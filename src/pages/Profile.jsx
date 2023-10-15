@@ -15,8 +15,7 @@ import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
 import { useDB } from '../context/DataContext';
 
-import { UploadButton } from "@bytescale/upload-widget-react";
-import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 /**
  * The Profile component for displaying and editing user data.

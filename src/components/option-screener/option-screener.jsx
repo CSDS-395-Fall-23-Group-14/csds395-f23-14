@@ -257,7 +257,6 @@ EnhancedTableHead.propTypes = {
 
 //Filter Logic
 function EnhancedTableToolbar(props) {
-
     const [anchorElDropdown, setAnchorElDropdown] = React.useState(null);
     const open = Boolean(anchorElDropdown);
     const handleDropdownClick = (dropDownevent) => {
@@ -267,7 +266,6 @@ function EnhancedTableToolbar(props) {
         setAnchorElDropdown(null);
     };
     const { numSelected } = props;
-
     return (
         <Toolbar
             sx={{
