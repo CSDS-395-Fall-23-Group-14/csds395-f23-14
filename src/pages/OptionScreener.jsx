@@ -2,14 +2,14 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '@mui/material';
 import Navbar from '../components/navbar/navbar';
-import EnhancedTable from '../components/stock-screener/stock-screener';
+import OptionScreener from '../components/option-screener/option-screener';
 
 /**
  * Option Screener page that will allow users to choose options and integrate with finding hedges on Tiles
  *
  * @component
  */
-function OptionScreener() {
+function OptionScreenerPage() {
   const { logOut } = useAuth();
   
   /**
@@ -39,10 +39,10 @@ function OptionScreener() {
         <Navbar />
       </div>
       <div className='body'>
-        <EnhancedTable/>
+        <OptionScreener/>
       </div>
     </>
   );
 }
 
-export default OptionScreener;
+export default OptionScreenerPage;
