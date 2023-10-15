@@ -22,25 +22,27 @@ function DataContextProvider({ children }) {
 	 * @returns {Promise} A promise that resolves when the document is posted.
 	 */
 	const addUser = (uid, firstName, lastName) =>
-			setDoc(doc(db, "users", uid), {
-				first_name: firstName,
-				last_name: lastName
-			  });
-
-    const updateUserProfile = (uid, firstName, lastName, job, yearInvesting, organization, porfolio) =>
-			updateDoc(doc(db, "users", uid), {
-				first_name: firstName,
-				last_name: lastName,
-				job: job,
-				yearInvesting: yearInvesting,
-				organization: organization,
-				porfolio: porfolio,
+		setDoc(doc(db, "users", uid), {
+			first_name: firstName,
+			last_name: lastName
 			});
+			
+	const getUser = (uid) => getDoc(doc(db, "users", uid));
+	
+	const updateUserProfile = (uid, firstName, lastName, job, yearInvesting, organization, porfolio) =>
+		updateDoc(doc(db, "users", uid), {
+			first_name: firstName,
+			last_name: lastName,
+			job: job,
+			yearInvesting: yearInvesting,
+			organization: organization,
+			porfolio: porfolio,
+		});
 
 	const updateUserProfileAvatar = (uid, avatar) =>
-			updateDoc(doc(db, "users", uid), {
-				avatar: avatar
-			});
+		updateDoc(doc(db, "users", uid), {
+			avatar: avatar
+		});
 
 	/**
 	 * Gets all stocks from db
@@ -97,7 +99,15 @@ function DataContextProvider({ children }) {
 
 	return (
 		<DataContext.Provider value={{
-			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks, updateUserProfile, getUserProfile, updateUserProfileAvatar
+			addUser,
+			getUser,
+			get25Stocks,
+			get25Options,
+			getAllOptions,
+			getAllStocks,
+			updateUserProfile,
+			getUserProfile,
+			updateUserProfileAvatar
 		}}>
 			{children}
 		</DataContext.Provider>
@@ -110,6 +120,7 @@ function DataContextProvider({ children }) {
  *
  * @returns {object} An object containing database related functions.
  * @property {function} addUser - Function to add a new user document.
+ * @property {function} getUser - Function to get a new user document.
  */
 const useDB = () => {
 	return useContext(DataContext);

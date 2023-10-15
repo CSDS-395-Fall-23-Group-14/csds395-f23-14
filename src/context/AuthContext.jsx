@@ -25,7 +25,7 @@ const AuthContext = createContext();
  */
 function AuthContextProvider({ children }) {
 	const [user, setUser] = useState(null);
-	const { addUser } = useDB();
+	const { addUser, getUser, updateUserProfileAvatar } = useDB();
 	
 	/**
 	 * Creates a new user account with the provided email and password.
@@ -36,10 +36,10 @@ function AuthContextProvider({ children }) {
 	 */
 	const createUser = (firstName, lastName, email, password) => {
 		createUserWithEmailAndPassword(auth, email, password)
-		.then((user) => {
-			updateProfile(user.user, { displayName: email.split("@")[0] });
-			addUser(user.user.uid, firstName, lastName);
-		});
+			.then((user) => {
+				updateProfile(user.user, { displayName: email.split("@")[0] });
+				addUser(user.user.uid, firstName, lastName);
+			});
 	};
 
 	const updateUserPassword = (user, password) => {
@@ -58,9 +58,17 @@ function AuthContextProvider({ children }) {
 	/**
 	 * Logs in a user using Google authentication.
 	 */
-	const googleLogin = () => {
+	const googleLogin = async () => {
+		console.log('loggin in with google')
 		const provider = new GoogleAuthProvider();
-		signInWithPopup(auth, provider);
+		const userCred = await signInWithPopup(auth, provider)
+		const userDoc = await getUser(userCred.user.uid)
+		if (!userDoc.exists()) {
+			addUser(userCred.user.uid, userCred.user.displayName, "");
+			updateUserProfileAvatar(userCred.user.uid, userCred.user.photoURL);
+		}
+			
+		return userCred
 	};
 	
 	/**
@@ -78,7 +86,7 @@ function AuthContextProvider({ children }) {
 	const updateUserProfile = (profile) => updateProfile(user, profile);
 	
 	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {console.log(currentUser); setUser(currentUser)});
+		const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
 		return () => unsubscribe();
 	}, []);
 	

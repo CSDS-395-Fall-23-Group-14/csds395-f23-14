@@ -28,7 +28,6 @@ function Profile() {
 	const [ error, setError] = useState(null);
 	const { updateUserProfile, getUserProfile, updateUserProfileAvatar } = useDB();
 	const [ profile, setProfile] = useState(null);
-	console.log(profile)
 	const porfolio = [
 		{ value: "1", label: 'Conservative' },
 		{ value: "2", label: 'Moderate' },
