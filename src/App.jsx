@@ -32,9 +32,7 @@ function App() {
           <Route
             path='/profile'
             element={
-              <Protected>
-                <Profile />
-              </Protected>
+              <Profile />
             }
           />
           

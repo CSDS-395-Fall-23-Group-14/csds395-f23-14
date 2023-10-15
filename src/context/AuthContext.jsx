@@ -7,6 +7,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
+	updatePassword
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useDB } from './DataContext';
@@ -37,10 +38,14 @@ function AuthContextProvider({ children }) {
 		createUserWithEmailAndPassword(auth, email, password)
 		.then((user) => {
 			updateProfile(user.user, { displayName: email.split("@")[0] });
-			addUser(firstName, lastName);
+			addUser(user.user.uid, firstName, lastName);
 		});
 	};
-	
+
+	const updateUserPassword = (user, password) => {
+		updatePassword(user, password);
+	}
+
 	/**
 	 * Logs in a user with the provided email and password.
 	 *
@@ -79,7 +84,7 @@ function AuthContextProvider({ children }) {
 	
 	return (
 		<AuthContext.Provider value={{
-			createUser, genericLogin, googleLogin, logOut, updateUserProfile, user
+			createUser, genericLogin, googleLogin, logOut, updateUserProfile, user, updateUserPassword
 		}}>
 			{children}
 		</AuthContext.Provider>

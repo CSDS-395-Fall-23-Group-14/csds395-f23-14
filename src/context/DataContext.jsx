@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { addDoc, collection, query, getDoc, getDocs, limit } from "firebase/firestore";
+import { addDoc, collection, query, getDoc, getDocs, limit, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 // Create a context for managing queries and posts to the database.
@@ -21,11 +21,26 @@ function DataContextProvider({ children }) {
 	 * @param {String} lastName The last name of the user.
 	 * @returns {Promise} A promise that resolves when the document is posted.
 	 */
-	const addUser = (firstName, lastName) =>
-		addDoc(collection(db, "users"), {
-			first_name: firstName,
-			last_name: lastName
-		});
+	const addUser = (uid, firstName, lastName) =>
+			setDoc(doc(db, "users", uid), {
+				first_name: firstName,
+				last_name: lastName
+			  });
+
+    const updateUserProfile = (uid, firstName, lastName, job, yearInvesting, organization, porfolio) =>
+			updateDoc(doc(db, "users", uid), {
+				first_name: firstName,
+				last_name: lastName,
+				job: job,
+				yearInvesting: yearInvesting,
+				organization: organization,
+				porfolio: porfolio,
+			});
+
+	const updateUserProfileAvatar = (uid, avatar) =>
+			updateDoc(doc(db, "users", uid), {
+				avatar: avatar
+			});
 
 	/**
 	 * Gets all stocks from db
@@ -76,9 +91,13 @@ function DataContextProvider({ children }) {
 		return snapshot.docs.map(option => option.data());
 	}
 
+	const getUserProfile = (uid) => {
+		return getDoc(doc(db, "users", uid)).then((res) => res.data());
+	}
+
 	return (
 		<DataContext.Provider value={{
-			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks
+			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks, updateUserProfile, getUserProfile, updateUserProfileAvatar
 		}}>
 			{children}
 		</DataContext.Provider>
