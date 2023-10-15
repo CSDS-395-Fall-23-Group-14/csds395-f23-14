@@ -34,12 +34,13 @@ function Tiles() {
         onClick={handleLogOut}>
         Log Out
       </Button>
-
+      
       <div className='header'>
         <Navbar />
       </div>
       <div>Tiles</div>
-    </>)
+    </>
+  );
 }
 
 export default Tiles;

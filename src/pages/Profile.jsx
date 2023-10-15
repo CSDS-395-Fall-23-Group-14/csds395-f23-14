@@ -25,36 +25,34 @@ import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } fr
  * @returns {JSX.Element} The rendered React component.
  */
 function Profile() {
-    const { user, updateUserPassword } = useAuth();
+	const { user, updateUserPassword } = useAuth();
 	const [ error, setError] = useState(null);
-    const { updateUserProfile, getUserProfile, updateUserProfileAvatar } = useDB();
-    const [ profile, setProfile] = useState(null);
-    const porfolio = [
+	const { updateUserProfile, getUserProfile, updateUserProfileAvatar } = useDB();
+	const [ profile, setProfile] = useState(null);
+	console.log(profile)
+	const porfolio = [
 		{ value: "1", label: 'Conservative' },
 		{ value: "2", label: 'Moderate' },
 		{ value: "3", label: 'Growth' },
-    ];
+	];
 
 	const storage = getStorage();
 	const [selectedImage, setSelectedImage] = useState(null);
 
 	const options = {
-        apiKey: "public_FW25biM4EW93zG9nPRPXmV67qZaX",
-        maxFileCount: 1,
+		apiKey: "public_FW25biM4EW93zG9nPRPXmV67qZaX",
+		maxFileCount: 1,
 		path: {
 			folderPath: "/avatar",
 		},
-    };
-
+	};
+	
 	useEffect(() => {
-		if (user) {
-		getUserProfile(user.uid)
-			.then((data) => {
-			setProfile(data)
-			})
-		}
-	}, [user, profile]);
-
+		if (user)
+			getUserProfile(user.uid)
+				.then((data) => setProfile(data))
+	}, [getUserProfile, user]);
+	
   /**
 	 * Handles the profile update
 	 * Calls the updateUser and updatePassword function with user-provided info and password.
@@ -70,7 +68,7 @@ function Profile() {
 		
 		const newPassword = data.get('new_password');
 		const oldPassword = data.get('old_password');
-
+		
 		const p = {
 			firstName: data.get('first_name'),
 			lastName: data.get('last_name'),
@@ -79,28 +77,24 @@ function Profile() {
 			organization: data.get('organization'),
 			porfolio: data.get('porfolio'),
 		}
-
+		
 		// handle user information update
 		updateUserProfile(user.uid, p.firstName, p.lastName, p.job, p.yearInvesting, p.organization, p.porfolio);
-
-
+		
 		// handle password update
-		if (!newPassword && oldPassword) {
-				setError('Missing new password');
-		}
-		if (!oldPassword && newPassword ) {
+		if (!newPassword && oldPassword)
+			setError('Missing new password');
+		
+		if (!oldPassword && newPassword )
 			setError('Missing current password');
-		}
-
+		
 		if (newPassword && oldPassword ) {
 			const credential = EmailAuthProvider.credential(user.email, oldPassword);
-	
+			
 			// reaunthenticate the user first as password change requires recent sign in
 			reauthenticateWithCredential(user, credential)
-				.then((response) => {
-					console.log(response);
-					updateUserPassword(user, newPassword);
-				}).catch((error) => {
+				.then((response) => updateUserPassword(user, newPassword))
+				.catch((error) => {
 					switch (error.code) {
 						case 'auth/weak-password':
 							setError('Password should be at least 6 characters'); break;
@@ -110,29 +104,18 @@ function Profile() {
 							console.error(error);
 					}
 				});
-			}
-			
 		}
-
+	}
+	
 	const onImageUploadComplete = async (event) => {
 		const file = event.target.files[0];
-
+		
 		const storageRef = ref(storage, `/${user.uid}${file.name}`);
-		const metadata = {
-			contentType: 'image/*',
-		};
+		const metadata = { contentType: 'image/*' };
+		
 		await uploadBytes(storageRef, file, metadata)
-			.then((snapshot) => {
-				console.log('Uploaded a blob or file!');
-			})
-
-			await getDownloadURL(ref(storage, `/${user.uid}${file.name}`))
-					.then((url) => {
-						console.log(url);
-						updateUserProfileAvatar(user.uid, url);
-			});
-		
-		
+		await getDownloadURL(ref(storage, `/${user.uid}${file.name}`))
+			.then((url) => updateUserProfileAvatar(user.uid, url));
 	}
 
   return (
@@ -258,7 +241,7 @@ function Profile() {
 								{option.label}
 								</MenuItem>
 							))}
-           				</TextField>
+							</TextField>
 						<Button
 							margin='normal'
 							type='submit'

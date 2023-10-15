@@ -13,6 +13,12 @@ import Profile from './pages/Profile';
 import OptionScreener from './pages/OptionScreener';
 import Tiles from './pages/Tiles';
 
+/**
+ * The App component for displaying the app.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered React component.
+ */
 function App() {
   return (
     <DataContextProvider>
@@ -23,13 +29,13 @@ function App() {
             path='/login'
             element={<Login />}
           />
-
+          
           {/* Registration Page */}
           <Route
             path='/signup'
             element={<Signup />}
           />
-
+          
           {/* Profile Page - Password protected */}
           <Route
             path='/profile'
@@ -39,7 +45,7 @@ function App() {
               </Protected>
             }
           />
-
+          
           {/* OptionsScreener - Password protected */}
           <Route
             path='/optionscreener'
@@ -49,7 +55,7 @@ function App() {
               </Protected>
             }
           />
-
+          
           {/* Tiles - Password protected */}
           <Route
             path='/tiles'
@@ -59,7 +65,7 @@ function App() {
               </Protected>
             }
           />
-
+          
           {/* Home Page - Password protected */}
           <Route
             path='/'
@@ -69,7 +75,7 @@ function App() {
               </Protected>
             }
           />
-
+          
           {/* Any other page redirects to the home page */}
           <Route
             path='*'
@@ -77,7 +83,7 @@ function App() {
               <Navigate to='/' />
             }
           />
-
+          
         </Routes>
       </AuthContextProvider>
     </DataContextProvider>
