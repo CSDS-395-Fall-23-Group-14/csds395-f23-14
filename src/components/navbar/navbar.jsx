@@ -9,9 +9,26 @@ import TabContext from '@mui/lab/TabContext';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router";
+import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
 	const navigate = useNavigate();
+  const { logOut } = useAuth();
+  
+  /**
+   * Handles the logout button click event.
+   * Calls the logout function and handles any errors.
+   *
+   * @async
+   * @function
+   */
+  const handleLogOut = async () => {
+    try {
+      await logOut();
+    } catch(error) {
+      console.error(error);
+    }
+  }
 	
 	return(
 		<div className="wrapper">
@@ -46,7 +63,11 @@ export default function Navbar() {
 						<PersonIcon fontSize="large"/>
 					</IconButton>
 				</div>
-				<Button sx={{borderColor: "gray", color: "gray", '&:hover': {backgroundColor: "white", color: "gray"}, boxShadow: "none", border: "1px solid",backgroundColor: "white"}} variant="contained">Get Started</Button>
+				<Button
+        	variant="outlined"
+        	onClick={handleLogOut}>
+        	Log Out
+      	</Button>
 			</div>
 		</div>
 	);
