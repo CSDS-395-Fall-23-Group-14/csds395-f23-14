@@ -37,6 +37,11 @@ function DataContextProvider({ children }) {
 				porfolio: porfolio,
 			});
 
+	const updateUserProfileAvatar = (uid, avatar) =>
+			updateDoc(doc(db, "users", uid), {
+				avatar: avatar
+			});
+
 	/**
 	 * Gets all stocks from db
 	 * *******************
@@ -92,7 +97,7 @@ function DataContextProvider({ children }) {
 
 	return (
 		<DataContext.Provider value={{
-			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks, updateUserProfile, getUserProfile
+			addUser, get25Stocks, get25Options, getAllOptions, getAllStocks, updateUserProfile, getUserProfile, updateUserProfileAvatar
 		}}>
 			{children}
 		</DataContext.Provider>

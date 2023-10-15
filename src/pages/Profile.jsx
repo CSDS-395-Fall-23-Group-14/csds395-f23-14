@@ -5,15 +5,18 @@ import {
 	TextField,
 	Box,
 	Grid,
-	Alert
+	Alert,
+	Input
 } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { useAuth } from '../context/AuthContext';
 import { useDB } from '../context/DataContext';
+
+import { UploadButton } from "@bytescale/upload-widget-react";
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 /**
  * The Profile component for displaying and editing user data.
@@ -24,13 +27,24 @@ import { useDB } from '../context/DataContext';
 function Profile() {
     const { user, updateUserPassword } = useAuth();
 	const [ error, setError] = useState(null);
-    const { updateUserProfile, getUserProfile } = useDB();
+    const { updateUserProfile, getUserProfile, updateUserProfileAvatar } = useDB();
     const [ profile, setProfile] = useState(null);
     const porfolio = [
 		{ value: "1", label: 'Conservative' },
 		{ value: "2", label: 'Moderate' },
 		{ value: "3", label: 'Growth' },
     ];
+
+	const storage = getStorage();
+	const [selectedImage, setSelectedImage] = useState(null);
+
+	const options = {
+        apiKey: "public_FW25biM4EW93zG9nPRPXmV67qZaX",
+        maxFileCount: 1,
+		path: {
+			folderPath: "/avatar",
+		},
+    };
 
 	useEffect(() => {
 		if (user) {
@@ -39,7 +53,7 @@ function Profile() {
 			setProfile(data)
 			})
 		}
-	}, [user]);
+	}, [user, profile]);
 
   /**
 	 * Handles the profile update
@@ -100,6 +114,26 @@ function Profile() {
 			
 		}
 
+	const onImageUploadComplete = async (event) => {
+		const file = event.target.files[0];
+
+		const storageRef = ref(storage, `/${user.uid}${file.name}`);
+		const metadata = {
+			contentType: 'image/*',
+		};
+		await uploadBytes(storageRef, file, metadata)
+			.then((snapshot) => {
+				console.log('Uploaded a blob or file!');
+			})
+
+			await getDownloadURL(ref(storage, `/${user.uid}${file.name}`))
+					.then((url) => {
+						console.log(url);
+						updateUserProfileAvatar(user.uid, url);
+			});
+		
+		
+	}
 
   return (
     user && profile ? 
@@ -129,31 +163,35 @@ function Profile() {
 					
 					<Avatar
 						alt="avatar"
-						src="https://media.gcflearnfree.org/ctassets/topics/246/share_size_medium.jpg"
+						src={profile.avatar}
 						sx={{ width: 200, height: 200, marginBottom: 3 }}
+					/>
+					<Input
+						type="file"
+						fullWidth
+						onChange={onImageUploadComplete}
 					/>
 					<Box
 						component='form'
 						onSubmit={handleProfileUpdate}
 						sx={{ alignItems:'center' }}
 					>
-						
-						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
-							<TextField
-								margin='normal'
-								label='First Name'
-								name='first_name'
-								type='type'
-                				defaultValue={profile.first_name}
-							/>
-							<TextField
-								margin='normal'
-								label='Last Name'
-								name='last_name'
-								type='text'
-                				defaultValue={profile.last_name}
-							/>
-						</Box>
+						<TextField
+							margin='normal'
+							label='First Name'
+							name='first_name'
+							fullWidth
+							type='type'
+							defaultValue={profile.first_name}
+						/>
+						<TextField
+							fullWidth
+							margin='normal'
+							label='Last Name'
+							name='last_name'
+							type='text'
+							defaultValue={profile.last_name}
+						/>
 						<TextField
 							margin='normal'
 							label='Email'
