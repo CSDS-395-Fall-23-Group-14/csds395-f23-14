@@ -27,6 +27,12 @@ function AuthContextProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const { addUser, getUser, updateUserProfileAvatar } = useDB();
 	
+	// Grab user cred data from localStorage to avoid waiting for the server
+	useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+		setUser(loggedInUser);
+  }, []);
+	
 	/**
 	 * Creates a new user account with the provided email and password.
 	 *
@@ -40,9 +46,15 @@ function AuthContextProvider({ children }) {
 				updateProfile(user.user, { displayName: email.split("@")[0] });
 				addUser(user.user.uid, firstName, lastName);
 			});
-
-	const updateUserPassword = async (user, password) => await updatePassword(user, password);
-
+	
+	/**
+	 * Updates the current user's password
+	 * 
+	 * @param {*} password 
+	 * @returns 
+	 */
+	const updateUserPassword = async (password) => await updatePassword(user, password);
+	
 	/**
 	 * Logs in a user with the provided email and password.
 	 *
@@ -50,13 +62,16 @@ function AuthContextProvider({ children }) {
 	 * @param {string} password - The user's password.
 	 * @returns {Promise} A promise that resolves when the user is successfully logged in.
 	 */
-	const genericLogin = async (email, password) => await signInWithEmailAndPassword(auth, email, password);
+	const genericLogin = async (email, password) => {
+		const userCred = await signInWithEmailAndPassword(auth, email, password);
+		localStorage.setItem('user', JSON.stringify(userCred));
+		return userCred;
+	}
 	
 	/**
 	 * Logs in a user using Google authentication.
 	 */
 	const googleLogin = async () => {
-		console.log('loggin in with google')
 		const provider = new GoogleAuthProvider();
 		const userCred = await signInWithPopup(auth, provider)
 		const userDoc = await getUser(userCred.user.uid)
@@ -64,19 +79,23 @@ function AuthContextProvider({ children }) {
 			addUser(userCred.user.uid, userCred.user.displayName, "");
 			updateUserProfileAvatar(userCred.user.uid, userCred.user.photoURL);
 		}
-			
+		console.log(userCred)
+		localStorage.setItem('user', JSON.stringify(userCred));
 		return userCred
 	};
 	
 	/**
 	 * Logs out the currently authenticated user.
 	 */
-	const logOut = async () => await signOut(auth);
+	const logOut = async () => {
+		await signOut(auth);
+    localStorage.clear();
+	}
 	
 	/**
 	 * Updates the profile of the currently authenticated user.
 	 * 
-	 * @param {object} profile - The profile's `displayName` and `photoURL` to update.
+	 * @param {object} profile The profile's `displayName` and `photoURL` to update.
 	 * @param {string} profile.displayName
 	 * @param {string} profile.photoURL
 	 */

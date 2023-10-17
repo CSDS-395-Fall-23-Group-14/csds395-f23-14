@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,9 +15,19 @@ const ThemeContext = createContext();
  * @returns {JSX.Element} The rendered React component.
  */
 function ThemeContextProvider({ children }) {
-	const [theme, setTheme] = useState(createTheme({ palette: { mode: 'light' }}));
+	const [theme, setTheme] = useState(createTheme({ palette: { mode: localStorage.getItem('theme') }}));
   const setThemeMode = (customMode) => setTheme(createTheme({ palette: { mode: customMode }}));
   const getThemeMode = () => theme.palette.mode;
+  
+  useEffect(() => {
+    const localTheme = localStorage.getItem('theme')
+    if (localTheme)
+      setThemeMode(localTheme);
+  }, [])
+  
+  useEffect(() => {
+    localStorage.setItem('theme', theme.palette.mode)
+  }, [theme])
   
   return (
 		<ThemeContext.Provider

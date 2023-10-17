@@ -46,9 +46,8 @@ function Profile() {
 	};
 	
 	useEffect(() => {
-		if (user)
-			getUserProfile(user.uid)
-				.then((data) => setProfile(data))
+		getUserProfile()
+			.then((data) => setProfile(data))
 	}, [getUserProfile, user]);
 	
   /**
@@ -91,7 +90,7 @@ function Profile() {
 			
 			// reaunthenticate the user first as password change requires recent sign in
 			reauthenticateWithCredential(user, credential)
-				.then((response) => updateUserPassword(user, newPassword))
+				.then((response) => updateUserPassword(newPassword))
 				.catch((error) => {
 					switch (error.code) {
 						case 'auth/weak-password':
@@ -149,11 +148,11 @@ function Profile() {
 					<Input
 						type="file"
 						fullWidth
-						onChange={onImageUploadComplete}
+						onChange={() => onImageUploadComplete()}
 					/>
 					<Box
 						component='form'
-						onSubmit={handleProfileUpdate}
+						onSubmit={() => handleProfileUpdate()}
 						sx={{ alignItems:'center' }}
 					>
 						<TextField
