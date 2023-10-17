@@ -86,6 +86,38 @@ function DataContextProvider({ children }) {
 
 }
 
+function createData(name, ticker, marketValue, weight, notationalValue, sector) {
+    return {
+        name,
+        ticker,
+        marketValue,
+        weight,
+        notationalValue,
+        sector
+    };
+}
+
+export function GetStocks() {
+	const { get25Stocks } = useDB();
+	const [item, setItem] = React.useState([]);
+
+	React.useEffect(() => {
+		const result = async () => {
+			const stocks = await get25Stocks();
+			const len = stocks.length;
+			var rows = [len];
+			for (let i = 0; i < len; i++) {
+				rows[i] = createData(stocks[i].companyname, stocks[i].ticker, stocks[i].marketvalue, stocks[i].weight, stocks[i].notionalvalue, stocks[i].sector);
+			}
+			setItem(rows);
+		};
+
+		result();
+	}, []);
+
+	return item;
+}
+
 /**
  * A hook for accessing database related functions.
  *
