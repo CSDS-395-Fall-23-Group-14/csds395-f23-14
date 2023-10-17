@@ -35,7 +35,18 @@ export default function Navbar() {
 			<div className="navbar-center">
 				<div className="search-wrapper">
 					<Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-						<TextField InputProps={{ sx: {borderRadius: 10, '&.Mui-focused fieldset': {borderColor: 'yellow'}}}} id="outlined-basic" size="small" label="Search" variant="outlined" />
+						<TextField
+							InputProps={{
+								sx: {
+									borderRadius: 10,
+									'&.Mui-focused fieldset': {borderColor: 'yellow'}
+								}
+							}}
+							id="outlined-basic"
+							size="small"
+							label="Search"
+							variant="outlined"
+						/>
 					</Box>
 				</div>
 				<div className="tab-menu">
@@ -54,7 +65,10 @@ export default function Navbar() {
 			</div>
 			<div className="navbar-right">
 				<div className="theme-button">
-					<IconButton sx={{ ml: 1 }} onClick={() => setThemeMode(getThemeMode() === 'dark' ? 'light' : 'dark')}>
+					<IconButton
+						sx={{ ml: 1 }}
+						onClick={() => setThemeMode(getThemeMode() === 'dark' ? 'light' : 'dark')}
+					>
 						{getThemeMode() === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
 					</IconButton>
 				</div>

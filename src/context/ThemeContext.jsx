@@ -15,14 +15,16 @@ const ThemeContext = createContext();
  * @returns {JSX.Element} The rendered React component.
  */
 function ThemeContextProvider({ children }) {
-	const [theme, setTheme] = useState(createTheme({ palette: { mode: localStorage.getItem('theme') }}));
-  const setThemeMode = (customMode) => setTheme(createTheme({ palette: { mode: customMode }}));
+	const [theme, setTheme] = useState(createTheme({ palette: { mode: 'dark' } }));
+  const setThemeMode = (customMode) => {
+    const modeNotNull = customMode  ? customMode : 'dark'
+    const modeNotNullString = modeNotNull !== 'null' ? modeNotNull : 'dark'
+    setTheme(createTheme({ palette: { mode: modeNotNullString}}));
+  }
   const getThemeMode = () => theme.palette.mode;
   
   useEffect(() => {
-    const localTheme = localStorage.getItem('theme')
-    if (localTheme)
-      setThemeMode(localTheme);
+    setThemeMode(localStorage.getItem('theme'));
   }, [])
   
   useEffect(() => {

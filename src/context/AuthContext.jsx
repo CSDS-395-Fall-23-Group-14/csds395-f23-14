@@ -28,10 +28,12 @@ function AuthContextProvider({ children }) {
 	const { addUser, getUser, updateUserProfileAvatar } = useDB();
 	
 	// Grab user cred data from localStorage to avoid waiting for the server
+	useEffect(() => setUser(JSON.parse(localStorage.getItem("user"))), []);
+	
+	// Update cred data in localStorage whenever user changes
 	useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("user"));
-		setUser(loggedInUser);
-  }, []);
+    localStorage.setItem('user', JSON.stringify(user));
+  }, [user])
 	
 	/**
 	 * Creates a new user account with the provided email and password.
@@ -64,7 +66,6 @@ function AuthContextProvider({ children }) {
 	 */
 	const genericLogin = async (email, password) => {
 		const userCred = await signInWithEmailAndPassword(auth, email, password);
-		localStorage.setItem('user', JSON.stringify(userCred));
 		return userCred;
 	}
 	
@@ -79,8 +80,6 @@ function AuthContextProvider({ children }) {
 			addUser(userCred.user.uid, userCred.user.displayName, "");
 			updateUserProfileAvatar(userCred.user.uid, userCred.user.photoURL);
 		}
-		console.log(userCred)
-		localStorage.setItem('user', JSON.stringify(userCred));
 		return userCred
 	};
 	
@@ -89,7 +88,6 @@ function AuthContextProvider({ children }) {
 	 */
 	const logOut = async () => {
 		await signOut(auth);
-    localStorage.clear();
 	}
 	
 	/**
