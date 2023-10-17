@@ -1,6 +1,7 @@
 import React, { useState, createContext, useContext } from 'react';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 // Create a context for managing theme
 const ThemeContext = createContext();
@@ -26,6 +27,7 @@ function ThemeContextProvider({ children }) {
 		  }}
     >
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         {children}
       </ThemeProvider>
     </ThemeContext.Provider>
@@ -36,7 +38,6 @@ function ThemeContextProvider({ children }) {
  * A hook for accessing theme related functions.
  *
  * @returns {object} An object containing theme related functions.
- * @property {object} theme - The theme of the app.
  * @property {function} getThemeMode - Function to get the theme mode of the app.
  * @property {function} setThemeMode - Function to set the theme mode of the app.
  */
