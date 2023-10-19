@@ -1,16 +1,15 @@
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 
-import React from 'react';
 import Navbar from '../components/navbar/navbar';
-import StockScreener from '../components/stock-screener/stock-screener';
+import OptionScreener from '../components/option-screener/option-screener';
 
 /**
- * The Home component representing the main page of the application.
+ * Option Screener page that will allow users to choose options and integrate with finding hedges on Tiles
  *
  * @component
- * @returns {JSX.Element} The rendered React component.
  */
-function Home() {
+function OptionScreenerPage() {
   const theme = useTheme();
   
   return (
@@ -29,10 +28,10 @@ function Home() {
           backgroundColor: theme.palette.background.default
         }}
       >
-        <StockScreener/>
+        <OptionScreener/>
       </div>
     </>
   );
 }
 
-export default Home;
+export default OptionScreenerPage;

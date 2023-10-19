@@ -1,8 +1,6 @@
 .barChartContainer {
-  width: fit-content;
-  background-color: white;
   padding: 24px;
-  margin:10px;
+  margin: 10px;
 }
 
 .barChart {
@@ -12,16 +10,10 @@
 .tooltip {
   width: fit-content;
   position: absolute;
-  background-color: white;
   z-index: 1;
   border: solid;
   border-width: 1px;
   border-radius: 5px;
   padding: 10px;
   opacity: 0;
-}
-
-text {
-  font-size: 8px;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }

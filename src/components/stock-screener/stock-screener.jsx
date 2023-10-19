@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import "./stock-screener.css";
 import {Box} from '@mui/material/';
 import { EnhancedTable } from "../EnhancedTable";

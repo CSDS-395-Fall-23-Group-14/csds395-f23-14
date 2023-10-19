@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 /**
  * A component that provides protection for routes based on user authentication.
@@ -11,9 +11,9 @@ import { useAuth } from '../context/AuthContext';
  * @returns {React.ReactNode} The rendered React component.
  */
 const Protected = ({ children }) => {
-  const { user } = useAuth();
+  const { currUser } = useContext(AuthContext);
   
-  if (!user)
+  if (!currUser)
     // Redirect to the login page if the user is not authenticated.
     return <Navigate to='/login' />;
 

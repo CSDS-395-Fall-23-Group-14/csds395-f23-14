@@ -7,11 +7,37 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
+	updatePassword,
+	EmailAuthProvider,
+	reauthenticateWithCredential,
+	reauthenticateWithPopup,
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { useDB } from './DataContext';
 
-// Create a context for managing authentication.
+import { DataContext } from './DataContext';
+import { StorageContext } from './StorageContext';
+
+/**
+ * @typedef AuthContext A context for managing authentication.
+ * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericSignup Creates a new user account with the provided email and password.
+ * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericLogin Logs in a user with the provided email and password.
+ * @property {() => Promise<UserCredential>} googleLogin Logs in a user with Google authentication.
+ * @property {(password: string) => Promise<UserCredential>} reauthenticateGeneric Re-authenticates a user signed in with username and email.
+ * @property {() => Promise<UserCredential>} reauthenticateGoogle Re-authenticates a user signed in with Google.
+ * @property {() => Promise<void>} logOut Logs out the currently authenticated user.
+ * @property {() => Promise<object>} getUserProfile Gets the profile of the currently authenticated user
+ * @property {(profile: object) => Promise<void>} updateUserProfile Updates the profile of the currently authenticated user.
+ * @property {() => string | null} getUserAvatar Gets the user's avatar image file url.
+ * @property {(file: File) => Promise<void>} updateUserAvatar Updates the avatar of the currently authenticated user.
+ * @property {() => string | null} getUserDispName Gets the user's display name.
+ * @property {(name: string) => Promise<void>} updateUserDispName Updates the display name of the currently authenticated user.
+ * @property {(password: string) => Promise<void>} updateUserPassword Updates the password of the currently authenticated user.
+ * @property {null | import('firebase/auth').User } currUser The current user account.
+ */
+
+/**
+ * @type {import("react").Context<AuthContext>}
+ */
 const AuthContext = createContext();
 
 /**
@@ -23,85 +49,122 @@ const AuthContext = createContext();
  * @returns {JSX.Element} The rendered React component.
  */
 function AuthContextProvider({ children }) {
-	const [user, setUser] = useState(null);
-	const { addUser } = useDB();
-	
-	/**
-	 * Creates a new user account with the provided email and password.
-	 *
-	 * @param {string} email - The user's email address.
-	 * @param {string} password - The user's password.
-	 * @returns {Promise} A promise that resolves when the user account is created.
-	 */
-	const createUser = (firstName, lastName, email, password) => {
-		createUserWithEmailAndPassword(auth, email, password)
-		.then((user) => {
-			updateProfile(user.user, { displayName: email.split("@")[0] });
-			addUser(firstName, lastName);
-		});
-	};
-	
-	/**
-	 * Logs in a user with the provided email and password.
-	 *
-	 * @param {string} email - The user's email address.
-	 * @param {string} password - The user's password.
-	 * @returns {Promise} A promise that resolves when the user is successfully logged in.
-	 */
-	const genericLogin = (email, password) => signInWithEmailAndPassword(auth, email, password);
-	
-	/**
-	 * Logs in a user using Google authentication.
-	 */
-	const googleLogin = () => {
-		const provider = new GoogleAuthProvider();
-		signInWithPopup(auth, provider);
-	};
-	
-	/**
-	 * Logs out the currently authenticated user.
-	 */
-	const logOut = () => signOut(auth);
-	
-	/**
-	 * Updates the profile of the currently authenticated user.
-	 * 
-	 * @param {object} profile - The profile's `displayName` and `photoURL` to update.
-	 * @param {string} profile.displayName
-	 * @param {string} profile.photoURL
-	 */
-	const updateUserProfile = (profile) => updateProfile(user, profile);
+	const [currUser, setCurrUser] = useState(auth.currentUser);
+	const { uploadAvatar } = useContext(StorageContext);
+	const { setUserDoc, getUserDoc } = useContext(DataContext);
 	
 	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {console.log(currentUser); setUser(currentUser)});
+		// Grab user cred data from localStorage to avoid waiting for the server
+		setCurrUser(JSON.parse(localStorage.getItem("user")));
+		// console.log(currUser?.providerData[0])
+		
+		// Update the user whenever the authentication state changes
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setCurrUser(user);
+			localStorage.setItem('user', JSON.stringify(user));
+		});
 		return () => unsubscribe();
 	}, []);
 	
+	const genericSignup = async (displayName, email, password) => {
+		try {
+			const userCred = await createUserWithEmailAndPassword(auth, email, password)
+			await updateProfile(userCred.user, { displayName: displayName });
+			await setUserDoc(userCred.user.uid, {});
+			return userCred;
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+	}
+	
+	const genericLogin = async (email, password) => {
+		const userCred = await signInWithEmailAndPassword(auth, email, password);
+		return userCred;
+	}
+	
+	const googleLogin = async () => {
+		const provider = new GoogleAuthProvider();
+		const userCred = await signInWithPopup(auth, provider);
+		
+		// Add user to the database if it isn't already there
+		const userDoc = await getUserDoc(userCred.user.uid);
+		if (!userDoc)
+			await setUserDoc(userCred.user.uid, {});
+		
+		return userCred;
+	}
+	
+	const reauthenticateGeneric = async (password) => {
+		const authCred = EmailAuthProvider.credential(currUser.email, password);
+		const userCred = await reauthenticateWithCredential(currUser, authCred);
+		return userCred;
+	}
+	
+	const reauthenticateGoogle = async () => {
+		const provider = new GoogleAuthProvider();
+		const userCred = await reauthenticateWithPopup(currUser, auth, provider);
+		return userCred;
+	}
+	
+	const logOut = async () => {
+		return await signOut(auth);
+	}
+	
+	const getUserProfile = async () => {
+		const userDoc = await getUserDoc(currUser.uid);
+		return userDoc;
+	}
+	
+	const updateUserProfile = async (profile) => {
+		return await setUserDoc(currUser.uid, profile);
+	}
+	
+	const getUserAvatar = () => {
+		return currUser.photoURL;
+	}
+	
+	const updateUserAvatar = async (file) => {
+		const url = await uploadAvatar(file, currUser.uid);
+		console.log(url);
+		return await updateProfile(currUser, { photoURL: url });
+	}
+	
+	const getUserDispName = () => {
+		return currUser.displayName;
+	}
+	
+	const updateUserDispName = async (name) => {
+		return await updateProfile(currUser, {displayName: name});
+	}
+	
+	const updateUserPassword = async (password) => {
+		return await updatePassword(currUser, password);
+	}
+	
 	return (
-		<AuthContext.Provider value={{
-			createUser, genericLogin, googleLogin, logOut, updateUserProfile, user
-		}}>
+		<AuthContext.Provider
+			value={{
+				genericSignup,
+				genericLogin,
+				googleLogin,
+				reauthenticateGeneric,
+				reauthenticateGoogle,
+				logOut,
+				getUserProfile,
+				updateUserProfile,
+				getUserAvatar,
+				updateUserAvatar,
+				getUserDispName,
+				updateUserDispName,
+				updateUserPassword,
+				currUser
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
-};
+}
 
-
-/**
- * A hook for accessing authentication-related functions and the current user.
- *
- * @returns {object} An object containing authentication functions and the current user.
- * @property {function} createUser - Function to create a new user account.
- * @property {function} genericLogin - Function to log in a user with email and password.
- * @property {function} googleLogin - Function to log in a user with Google authentication.
- * @property {function} logOut - Function to log out the current user.
- * @property {function} updateUserProfile - Function to update the current user's profile.
- * @property {function} updateUserProfile - Function to update the current user's profile.
- * @property {object} user - The current authenticated user object.
- */
-const useAuth = () => {
-	return useContext(AuthContext);
-};
-
-export { useAuth };
+export { AuthContext };
 export default AuthContextProvider;
