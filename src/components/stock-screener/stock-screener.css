@@ -86,3 +86,9 @@
     align-items: center;    
     justify-content: center;
 }
+
+.filterMenu {
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff;
+}

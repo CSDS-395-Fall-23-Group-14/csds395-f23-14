@@ -99,5 +99,37 @@ function DataContextProvider({ children }) {
 	);
 }
 
+function createData(name, ticker, marketValue, weight, notationalValue, sector) {
+    return {
+        name,
+        ticker,
+        marketValue,
+        weight,
+        notationalValue,
+        sector
+    };
+}
+
+function GetStocks() {
+	const { get25Stocks } = useContext();
+	const [item, setItem] = React.useState([]);
+
+	React.useEffect(() => {
+		const result = async () => {
+			const stocks = await get25Stocks();
+			const len = stocks.length;
+			var rows = [len];
+			for (let i = 0; i < len; i++) {
+				rows[i] = createData(stocks[i].companyname, stocks[i].ticker, stocks[i].marketvalue, stocks[i].weight, stocks[i].notionalvalue, stocks[i].sector);
+			}
+			setItem(rows);
+		};
+
+		result();
+	}, []);
+
+	return item;
+}
+
 export { DataContext };
 export default DataContextProvider;
