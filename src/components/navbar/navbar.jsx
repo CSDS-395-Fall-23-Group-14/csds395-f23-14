@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router";
+import {
+	Box,
+	Tab,
+	Tabs,
+	Button,
+	IconButton,
+	TextField
+} from '@mui/material';
+import {
+	Person,
+	Brightness4,
+	Brightness7
+} from '@mui/icons-material';
+import TabContext from '@mui/lab/TabContext';
+
 import logo from "../../images/EZ$-logo-transparent.png";
 import "./navbar.css";
-import TextField from '@mui/material/TextField';
-import PersonIcon from '@mui/icons-material/Person';
-import {Box, Tab, Tabs } from '@mui/material';
-import TabContext from '@mui/lab/TabContext';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import { useNavigate } from "react-router";
-import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+
+import { AuthContext } from '../../context/AuthContext';
+import { ThemeContext } from '../../context/ThemeContext';
 
 export default function Navbar() {
 	const navigate = useNavigate();
-  const { logOut } = useAuth();
-	const { setThemeMode, getThemeMode } = useTheme()
+  const { logOut } = useContext(AuthContext);
+	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	
 	return(
 		<div className="wrapper">
@@ -27,7 +35,7 @@ export default function Navbar() {
 						height={60}
 						alt="logo"
 						style={{
-							filter: getThemeMode() === "dark" ? 'invert(1)' : ''
+							filter: themeMode === "dark" ? 'invert(1)' : ''
 						}}
 					/>
 				</div>
@@ -67,15 +75,15 @@ export default function Navbar() {
 				<div className="theme-button">
 					<IconButton
 						sx={{ ml: 1 }}
-						onClick={() => setThemeMode(getThemeMode() === 'dark' ? 'light' : 'dark')}
+						onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
 					>
-						{getThemeMode() === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+						{themeMode === 'dark' ? <Brightness7 /> : <Brightness4 />}
 					</IconButton>
 				</div>
 				
 				<div className="user-icon">
 					<IconButton onClick={() => navigate('/profile')}>
-						<PersonIcon fontSize="large"/>
+						<Person fontSize="large"/>
 					</IconButton>
 				</div>
 				

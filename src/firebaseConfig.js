@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -44,3 +45,10 @@ export const auth = getAuth(app);
  * @type {import("firebase/firestore").Firestore}
  */
 export const db = getFirestore(app);
+
+/**
+ * Firebase Storage instance for accessing the Firestore storage.
+ *
+ * @type {import("firebase/storage").Firestore}
+ */
+export const storage = getStorage(app);

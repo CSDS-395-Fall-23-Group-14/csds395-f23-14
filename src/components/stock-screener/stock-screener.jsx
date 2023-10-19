@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import "./stock-screener.css";
 import {Box, alpha, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, FormControlLabel, Switch, Menu, MenuItem, Button} from '@mui/material/';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Popup from 'reactjs-popup';
 import BarChart from '../barChart/barChart';
-import { useDB } from '../../context/DataContext.jsx'; // include const { get25Stocks } = useDB(); where you need to get data then call asyc get25Stocks() function.
+import { DataContext } from '../../context/DataContext.jsx';
 
 
 

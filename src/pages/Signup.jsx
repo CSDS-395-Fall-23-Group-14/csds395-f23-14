@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
 	Button,
@@ -12,7 +12,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 /**
  * The SignUp component for user registration.
@@ -21,7 +21,7 @@ import { useAuth } from '../context/AuthContext';
  * @returns {JSX.Element} The rendered React component.
  */
 function SignUp() {
-	const { createUser, googleLogin, user } = useAuth();
+	const { genericSignup, googleLogin, currUser } = useContext(AuthContext);
 	const [error, setError] = useState(null);
 	
 	/**
@@ -52,13 +52,13 @@ function SignUp() {
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		const firstName = data.get('first_name');
-		const lastName = data.get('last_name');
+		const displayName = data.get('first_name') + " " + data.get('last_name');
 		const email = data.get('email');
 		const password = data.get('password');
 		
 		try {
-			createUser(firstName, lastName, email, password);
+			console.log('generic signup')
+			genericSignup(displayName, email, password);
 		} catch (error) {
 			switch (error.code) {
 				case 'auth/email-already-in-use':
@@ -74,7 +74,7 @@ function SignUp() {
 	};
 	
 	return (
-		user ? <Navigate to='/home'/> :
+		currUser ? <Navigate to='/home'/> :
 		<Grid
 			container
 			sx={{ height: '100vh' }}

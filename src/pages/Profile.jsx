@@ -1,122 +1,128 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import {
 	Button,
 	TextField,
 	Box,
 	Grid,
-	Alert,
-	Input
+	Alert
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
+import CloudUploadIcon from "@mui/icons-material/UploadFile";
 
-import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import loginbg from '../images/loginbg.png';
-import { useAuth } from '../context/AuthContext';
-import { useDB } from '../context/DataContext';
-
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { AuthContext } from '../context/AuthContext';
 
 /**
- * The Profile component for displaying and editing user data.
- * 
+ * The Profile page for displaying and editing user data.
  * @component
  * @returns {JSX.Element} The rendered React component.
  */
 function Profile() {
-	const { user, updateUserPassword } = useAuth();
+	const {
+		reauthenticateGeneric,
+		getUserProfile,
+		updateUserProfile,
+		getUserAvatar,
+		updateUserAvatar,
+		getUserDispName,
+		updateUserDispName,
+		updateUserPassword,
+		currUser
+	} = useContext(AuthContext);
+	
+	console.log(currUser);
+	const isGoogleAuthenticated = currUser.providerData[0].providerId === 'google.com';
+	
 	const [ error, setError] = useState(null);
-	const { updateUserProfile, getUserProfile, updateUserProfileAvatar } = useDB();
 	const [ profile, setProfile] = useState(null);
-	const porfolio = [
+	
+	const [imageLoading, setImageLoading] = useState(false);
+	const [profileLoading, setProfileLoading] = useState(false);
+	const [avatar, setAvatar] = useState(getUserAvatar());
+	const [dispName, setDispName] = useState(getUserDispName());
+	
+	const portfolio = [
 		{ value: "1", label: 'Conservative' },
 		{ value: "2", label: 'Moderate' },
 		{ value: "3", label: 'Growth' },
 	];
 
-	const storage = getStorage();
-	const [selectedImage, setSelectedImage] = useState(null);
-
-	const options = {
-		apiKey: "public_FW25biM4EW93zG9nPRPXmV67qZaX",
-		maxFileCount: 1,
-		path: {
-			folderPath: "/avatar",
-		},
-	};
 	
 	useEffect(() => {
-		getUserProfile()
-			.then((data) => setProfile(data))
-	}, [getUserProfile, user]);
+		setProfile(async () => await getUserProfile());
+	}, [getUserProfile]);
+	
+	const refreshAvatar = (() => {
+		setAvatar(getUserAvatar());
+	});
 	
   /**
 	 * Handles the profile update
 	 * Calls the updateUser and updatePassword function with user-provided info and password.
 	 * Updates the user profile and adds user data to Firestore upon successful update
 	 *
-	 * @async
-	 * @function
-	 * @param {Event} event - The form submission event.
+	 * @param {Event} event The form submission event.
 	 */
 	const handleProfileUpdate = async (event) => {
 		event.preventDefault();
+		setProfileLoading(true);
 		const data = new FormData(event.currentTarget);
 		
 		const newPassword = data.get('new_password');
 		const oldPassword = data.get('old_password');
 		
-		const p = {
-			firstName: data.get('first_name'),
-			lastName: data.get('last_name'),
-			job: data.get('job'),
-			yearInvesting: data.get('year_investing'),
-			organization: data.get('organization'),
-			porfolio: data.get('porfolio'),
+		if (data.get('first_name') !== '' || data.get('last_name') !== '') {
+			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
+			setDispName(getUserDispName());
 		}
 		
 		// handle user information update
-		updateUserProfile(user.uid, p.firstName, p.lastName, p.job, p.yearInvesting, p.organization, p.porfolio);
+		await updateUserProfile({
+			job: data.get('job'),
+			yearsInvesting: data.get('year_investing'),
+			organization: data.get('organization'),
+			portfolio: data.get('porfolio'),
+		});
 		
 		// handle password update
-		if (!newPassword && oldPassword)
-			setError('Missing new password');
-		
-		if (!oldPassword && newPassword )
+		if (newPassword && !oldPassword)
 			setError('Missing current password');
 		
 		if (newPassword && oldPassword ) {
-			const credential = EmailAuthProvider.credential(user.email, oldPassword);
+			// Re-authenticate the user (password change requires recent sign in)
+			await reauthenticateGeneric(oldPassword);
 			
-			// reaunthenticate the user first as password change requires recent sign in
-			reauthenticateWithCredential(user, credential)
-				.then((response) => updateUserPassword(newPassword))
-				.catch((error) => {
-					switch (error.code) {
-						case 'auth/weak-password':
-							setError('Password should be at least 6 characters'); break;
-						case "auth/wrong-password":
-							setError('Wrong current password'); break;	
-						default:
-							console.error(error);
-					}
-				});
+			try {
+				await updateUserPassword(newPassword);
+			} catch (error) {
+				switch (error.code) {
+					case 'auth/weak-password':
+						setError('Password should be at least 6 characters'); break;
+					case "auth/wrong-password":
+						setError('Wrong current password'); break;	
+					default:
+						console.error(error);
+				}
+			}
 		}
+		setProfileLoading(false);
 	}
 	
-	const onImageUploadComplete = async (event) => {
-		const file = event.target.files[0];
-		
-		const storageRef = ref(storage, `/${user.uid}${file.name}`);
-		const metadata = { contentType: 'image/*' };
-		
-		await uploadBytes(storageRef, file, metadata)
-		await getDownloadURL(ref(storage, `/${user.uid}${file.name}`))
-			.then((url) => updateUserProfileAvatar(user.uid, url));
+	/**
+	 * Handles the avatar update
+	 * 
+	 * @param {File} file The image upload event
+	 */
+	const uploadImage = async (file) => {
+		setImageLoading(true);
+		await updateUserAvatar(file);
+		refreshAvatar();
+		setImageLoading(false);
 	}
-
-  return (
-    user && profile ? 
+	
+	return (
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -142,65 +148,82 @@ function Profile() {
 				>
 					<Avatar
 						alt="avatar"
-						src={profile.avatar}
+						src={avatar}
 						sx={{ width: 200, height: 200, marginBottom: 3 }}
 					/>
-					<Input
-						type="file"
-						fullWidth
-						onChange={() => onImageUploadComplete()}
-					/>
+					{
+						isGoogleAuthenticated ? <></> : 
+						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
+							<LoadingButton
+								component="label"
+								color="secondary"
+								variant="outlined"
+								startIcon={<CloudUploadIcon />}
+								loading={imageLoading}
+								sx={{ marginRight: "1rem" }}
+							>
+								Upload Image
+								<input
+									type="file"
+									accept="image/*"
+									hidden
+									onChange={(event) => uploadImage(event.target.files[0])}
+								/>
+							</LoadingButton>
+						</Box>
+					}
+					<h3>{dispName}</h3>
 					<Box
-						component='form'
-						onSubmit={() => handleProfileUpdate()}
+						component="form"
 						sx={{ alignItems:'center' }}
+						onSubmit={(event) => handleProfileUpdate(event)}
 					>
-						<TextField
-							margin='normal'
-							label='First Name'
-							name='first_name'
-							fullWidth
-							type='type'
-							defaultValue={profile.first_name}
-						/>
-						<TextField
-							fullWidth
-							margin='normal'
-							label='Last Name'
-							name='last_name'
-							type='text'
-							defaultValue={profile.last_name}
-						/>
+						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
+							<TextField
+								margin='normal'
+								label='First Name'
+								name='first_name'
+								fullWidth
+								type='type'
+							/>
+							<TextField
+								margin='normal'
+								label='Last Name'
+								name='last_name'
+								fullWidth
+								type='type'
+							/>
+						</Box>
 						<TextField
 							margin='normal'
 							label='Email'
 							name='email'
 							type='text'
-							disabled
+							disabled={true}
 							fullWidth
-							defaultValue={user.email}
 						/>
 						{error ? <Alert severity="error">{error}</Alert> : null}
-						<TextField
-							margin='normal'
-							label='Old Password'
-							name='old_password'
-							type='password'
-							fullWidth
-						/>
-						<TextField
-							margin='normal'
-							label='New Password'
-							name='new_password'
-							type='password'
-							fullWidth
-						/>
+						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
+							<TextField
+								margin='normal'
+								label='Old Password'
+								name='old_password'
+								type='password'
+								fullWidth
+							/>
+							<TextField
+								margin='normal'
+								label='New Password'
+								name='new_password'
+								type='password'
+								fullWidth
+							/>
+						</Box>
 						<TextField
 							margin='normal'
 							label='Job'
 							name='job'
 							type='text'
-							defaultValue={profile.job}
 							fullWidth
 						/>
 						<TextField
@@ -208,7 +231,6 @@ function Profile() {
 							label='Organization'
 							name='organization'
 							type='text'
-							defaultValue={profile.organization}
 							fullWidth
 						/>
 						<TextField
@@ -217,7 +239,6 @@ function Profile() {
 							id="outlined-number"
 							label="Years of Investing"
 							type="number"
-							defaultValue={profile.yearInvesting}
 							InputLabelProps={{
 								shrink: true,
 							}}
@@ -229,29 +250,27 @@ function Profile() {
 							fullWidth
 							select
 							label="Porfolio"
-							defaultValue={profile.porfolio}
-							helperText="Please select your investment porfolio"
 						>
-							{porfolio.map((option) => (
+							{portfolio?.map((option) => (
 								<MenuItem key={option.value} value={option.value}>
-								{option.label}
+									{option.label}
 								</MenuItem>
 							))}
 							</TextField>
-						<Button
-							margin='normal'
+						<LoadingButton
 							type='submit'
+							margin='normal'
 							variant='contained'
+							loading={profileLoading}
 							sx={{ my: 2 }}
 							fullWidth
 						>
 							Update Profile
-						</Button>
+						</LoadingButton>
 					</Box>
 				</Box>
 			</Grid>
 		</Grid>
-    : <></>
   )
 }
 

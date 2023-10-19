@@ -2,9 +2,10 @@ import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 /* Context */
-import AuthContextProvider from './context/AuthContext';
-import DataContextProvider from './context/DataContext';
 import ThemeContextProvider from './context/ThemeContext';
+import DataContextProvider from './context/DataContext';
+import StorageContextProvider from './context/StorageContext';
+import AuthContextProvider from './context/AuthContext';
 import Protected from './components/protected';
 
 /* Pages */
@@ -24,72 +25,74 @@ import Tiles from './pages/Tiles';
 function App() {
   return (
     <ThemeContextProvider>
-      <DataContextProvider>
-        <AuthContextProvider>
-          <Routes>
-            {/* Login Page */}
-            <Route
-              path='/login'
-              element={<Login />}
-            />
-            
-            {/* Registration Page */}
-            <Route
-              path='/signup'
-              element={<Signup />}
-            />
-            
-            {/* Profile Page - Password protected */}
-            <Route
-              path='/profile'
-              element={
-                <Protected>
-                  <Profile />
-                </Protected>
-              }
-            />
-            
-            {/* OptionsScreener - Password protected */}
-            <Route
-              path='/optionscreener'
-              element={
-                <Protected>
-                  <OptionScreener />
-                </Protected>
-              }
-            />
-            
-            {/* Tiles - Password protected */}
-            <Route
-              path='/tiles'
-              element={
-                <Protected>
-                  <Tiles />
-                </Protected>
-              }
-            />
-            
-            {/* Home Page - Password protected */}
-            <Route
-              path='/'
-              element={
-                <Protected>
-                  <Home />
-                </Protected>
-              }
-            />
-            
-            {/* Any other page redirects to the home page */}
-            <Route
-              path='*'
-              element={
-                <Navigate to='/' />
-              }
-            />
-            
-          </Routes>
-        </AuthContextProvider>
-      </DataContextProvider>
+      <StorageContextProvider>
+        <DataContextProvider>
+          <AuthContextProvider>
+            <Routes>
+              {/* Login Page */}
+              <Route
+                path='/login'
+                element={<Login />}
+              />
+              
+              {/* Registration Page */}
+              <Route
+                path='/signup'
+                element={<Signup />}
+              />
+              
+              {/* Profile Page - Password protected */}
+              <Route
+                path='/profile'
+                element={
+                  <Protected>
+                    <Profile />
+                  </Protected>
+                }
+              />
+              
+              {/* OptionsScreener - Password protected */}
+              <Route
+                path='/optionscreener'
+                element={
+                  <Protected>
+                    <OptionScreener />
+                  </Protected>
+                }
+              />
+              
+              {/* Tiles - Password protected */}
+              <Route
+                path='/tiles'
+                element={
+                  <Protected>
+                    <Tiles />
+                  </Protected>
+                }
+              />
+              
+              {/* Home Page - Password protected */}
+              <Route
+                path='/'
+                element={
+                  <Protected>
+                    <Home />
+                  </Protected>
+                }
+              />
+              
+              {/* Any other page redirects to the home page */}
+              <Route
+                path='*'
+                element={
+                  <Navigate to='/' />
+                }
+              />
+              
+            </Routes>
+          </AuthContextProvider>
+        </DataContextProvider>
+      </StorageContextProvider>
     </ThemeContextProvider>
   );
 }

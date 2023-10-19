@@ -1,9 +1,17 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-// Create a context for managing theme
+/**
+ * @typedef ThemeContext A context for managing theme.
+ * @property {(customMode: import('@mui/material').PaletteMode) => void} setThemeMode
+ * @property {() => import('@mui/material').PaletteMode} getThemeMode
+ */
+
+/**
+ * @type {import("react").Context<ThemeContext>}
+ */
 const ThemeContext = createContext();
 
 /**
@@ -15,27 +23,18 @@ const ThemeContext = createContext();
  * @returns {JSX.Element} The rendered React component.
  */
 function ThemeContextProvider({ children }) {
-	const [theme, setTheme] = useState(createTheme({ palette: { mode: 'dark' } }));
-  const setThemeMode = (customMode) => {
-    const modeNotNull = customMode  ? customMode : 'dark'
-    const modeNotNullString = modeNotNull !== 'null' ? modeNotNull : 'dark'
-    setTheme(createTheme({ palette: { mode: modeNotNullString}}));
-  }
-  const getThemeMode = () => theme.palette.mode;
+	const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode')); // will be null at first, then 'dark'
+  const theme = createTheme({ palette: { mode: themeMode ? themeMode !== 'null' ? themeMode : 'dark' : 'dark' } });
   
   useEffect(() => {
-    setThemeMode(localStorage.getItem('theme'));
-  }, [])
-  
-  useEffect(() => {
-    localStorage.setItem('theme', theme.palette.mode)
-  }, [theme])
+    localStorage.setItem('themeMode', theme.palette.mode);
+  });
   
   return (
 		<ThemeContext.Provider
       value={{
-        setThemeMode,
-        getThemeMode
+        themeMode,
+        setThemeMode
 		  }}
     >
       <ThemeProvider theme={theme}>
@@ -46,16 +45,5 @@ function ThemeContextProvider({ children }) {
   );
 }
 
-/**
- * A hook for accessing theme related functions.
- *
- * @returns {object} An object containing theme related functions.
- * @property {function} getThemeMode - Function to get the theme mode of the app.
- * @property {function} setThemeMode - Function to set the theme mode of the app.
- */
-const useTheme = () => {
-	return useContext(ThemeContext);
-};
-
-export { useTheme };
+export { ThemeContext };
 export default ThemeContextProvider;

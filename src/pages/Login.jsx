@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
 	Button,
@@ -12,7 +12,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 /**
  * The Login component for user authentication.
@@ -21,7 +21,7 @@ import { useAuth } from '../context/AuthContext';
  * @returns {JSX.Element} The rendered React component.
  */
 function Login() {
-	const { genericLogin, googleLogin, user } = useAuth();
+	const { genericLogin, googleLogin, currUser } = useContext(AuthContext);
 	const [isWrongPass, setIsWrongPass] = useState(false);
 	
 	/**
@@ -60,7 +60,7 @@ function Login() {
 	};
 	
 	return (
-		user ? <Navigate to='/home'/> :
+		currUser ? <Navigate to='/'/> :
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -88,7 +88,7 @@ function Login() {
 					<h1>Log In</h1>
 					<Box
 						component='form'
-						onSubmit={handleGenericLogin}
+						onSubmit={(event) => handleGenericLogin(event)}
 						sx={{alignItems:'center'}}
 					>
 						{isWrongPass ? <Alert severity="error">Username or password was incorrect</Alert> : null}
@@ -124,7 +124,7 @@ function Login() {
 						<h3 align-self='centered'>or</h3>
 						<Button
 							sx={{ px: 10 }}
-							onClick={handleGoogleLogin}
+							onClick={() => handleGoogleLogin()}
 							variant='outlined'
 							startIcon={<GoogleIcon />}
 							fullWidth
