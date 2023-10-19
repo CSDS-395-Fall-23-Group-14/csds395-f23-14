@@ -6,14 +6,14 @@ import ThemeContextProvider from './context/ThemeContext';
 import DataContextProvider from './context/DataContext';
 import StorageContextProvider from './context/StorageContext';
 import AuthContextProvider from './context/AuthContext';
-import Protected from './components/protected';
+import Protected from './components/Protected';
 
 /* Pages */
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
-import OptionScreener from './pages/OptionScreener';
+import Options from './pages/Options';
 import Tiles from './pages/Tiles';
 
 /**
@@ -56,7 +56,7 @@ function App() {
                 path='/optionscreener'
                 element={
                   <Protected>
-                    <OptionScreener />
+                    <Options />
                   </Protected>
                 }
               />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import {
-	Button,
 	TextField,
 	Box,
 	Grid,
@@ -36,7 +35,7 @@ function Profile() {
 	const isGoogleAuthenticated = currUser.providerData[0].providerId === 'google.com';
 	
 	const [ error, setError] = useState(null);
-	const [ profile, setProfile] = useState(null);
+	const [ profile, setProfile] = useState(null); // May not be needed
 	
 	const [imageLoading, setImageLoading] = useState(false);
 	const [profileLoading, setProfileLoading] = useState(false);

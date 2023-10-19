@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/navbar/navbar';
+import Navbar from '../components/NavBar/NavBar';
 
 /**
  * The Tiles component for displaying and editing user data.

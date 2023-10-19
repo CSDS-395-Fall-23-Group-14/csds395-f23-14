@@ -1,32 +1,28 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 
-import Navbar from '../components/navbar/navbar';
-import OptionScreener from '../components/option-screener/option-screener';
+import NavBar from '../components/NavBar/NavBar';
+import OptionScreener from '../components/OptionScreener/OptionScreener';
 
 /**
  * Option Screener page that will allow users to choose options and integrate with finding hedges on Tiles
  *
  * @component
  */
-function OptionScreenerPage() {
+function Options() {
   const theme = useTheme();
   
   return (
     <>
       <div
         className='header'
-        style={{
-          backgroundColor: theme.palette.background.default
-        }}
+        style={{ backgroundColor: theme.palette.background.default }}
       >
-        <Navbar />
+        <NavBar />
       </div>
       <div
         className='body'
-        style={{
-          backgroundColor: theme.palette.background.default
-        }}
+        style={{ backgroundColor: theme.palette.background.default }}
       >
         <OptionScreener/>
       </div>
@@ -34,4 +30,4 @@ function OptionScreenerPage() {
   );
 }
 
-export default OptionScreenerPage;
+export default Options;

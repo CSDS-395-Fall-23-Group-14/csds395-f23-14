@@ -9,11 +9,10 @@ import {
 } from "d3";
 import { Card } from '@mui/material';
 
-import './barChart.css';
+import './barchart.css';
 
 /**
  * A bar chart component that displays data using D3.js.
- *
  * @component
  * @param {object} props - The props for the component.
  * @param {Array} props.data - The data to be displayed in the bar chart.
@@ -30,8 +29,8 @@ function BarChart({ data, width, height, property }) {
 		
 		const container = svg._groups[0][0].parentNode;
 		
-		const minChg = Math.min(...data.map(e => e[property]), -1.25) - 0.25;
-		const maxChg = Math.max(...data.map(e => e[property]), 1.25) + 0.25;
+		const minChg = Math.min(data.map((datum) => parseFloat(datum[property])), -1.25) - 0.25;
+		const maxChg = Math.max(data.map((datum) => parseFloat(datum[property])), 1.25) + 0.25;
 		
 		// Set up the y-axis
 		const scaleY = scaleLinear()
@@ -44,7 +43,7 @@ function BarChart({ data, width, height, property }) {
 		
 		// Set up the xaxis
 		const scaleX = scaleBand()
-			.domain(data.map(({ name }) => name))
+			.domain(data.map((datum) => datum['ticker']))
 			.range([0, width])
 			.padding(0.5)
 			
@@ -69,7 +68,7 @@ function BarChart({ data, width, height, property }) {
 			.join('rect')
 			.attr('class', 'bar')
 			
-			.attr('x', ({ name })=> scaleX(name))
+			.attr('x', (datum)=> scaleX(datum['ticker']))
 			.attr('width', scaleX.bandwidth())
 		
 		// Animate the bars' heights and colors
@@ -80,9 +79,9 @@ function BarChart({ data, width, height, property }) {
 			
 			.transition().duration((_value, index) => 100 * (index + 4))
 			
-			.attr('height', (datum) => scaleY(0) - scaleY(Math.abs(datum[property])))
-			.attr('y', (datum) => scaleY(Math.max(0, datum[property])))
-			.attr('fill', (datum) => scaleCol(datum[property]));
+			.attr('height', (datum) => scaleY(0) - scaleY(Math.abs(parseFloat(datum[property]))))
+			.attr('y', (datum) => scaleY(Math.max(0, parseFloat(datum[property]))))
+			.attr('fill', (datum) => scaleCol(parseFloat(datum[property])));
 		
 		const mouseover = (event) => {
 			const datum = event.target.__data__;
@@ -90,7 +89,7 @@ function BarChart({ data, width, height, property }) {
 			select('.tooltip')
 				.style('left', `${x + 20 + container.offsetLeft}px`)
 				.style('top', `${y + container.offsetTop}px`)
-				.html(datum.name + `:<br>${property}: ` + datum[property])
+				.html(datum['ticker'] + `:<br>${property}: ` + datum[property])
 				.style('opacity', 1);
 		}
 		const mousemove = (event) => {
@@ -121,13 +120,15 @@ function BarChart({ data, width, height, property }) {
 	return (
 		<Card
 			className='barChartContainer'
-			variant='outlined'>
+			variant='outlined'
+		>
 			<div className='tooltip' />
 			<svg
 				className='barChart'
 				width={width}
 				height={height}
-				ref={svgRef}>
+				ref={svgRef}
+			>
 				<g className='yaxis' />
 				<g className='xaxis' />
 			</svg>

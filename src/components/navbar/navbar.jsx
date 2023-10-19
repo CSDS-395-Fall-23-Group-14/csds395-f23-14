@@ -21,7 +21,7 @@ import "./navbar.css";
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeContext } from '../../context/ThemeContext';
 
-export default function Navbar() {
+function NavBar() {
 	const navigate = useNavigate();
   const { logOut } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
@@ -98,3 +98,5 @@ export default function Navbar() {
 		</div>
 	);
 }
+
+export default NavBar;
