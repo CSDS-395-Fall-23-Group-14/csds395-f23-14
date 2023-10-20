@@ -62,15 +62,11 @@ function NavBar() {
 				</div>
 				<div className="tab-menu">
 					<Box sx={{ width:'100%'}}>
-						<TabContext>
-							<Box sx={{border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
-								<Tabs variant="scrollable">
-									<Tab label='Home' onClick={() => navigate('/')}/>
-									<Tab label='Options' onClick={() => navigate('/optionscreener')}/>
-									<Tab label='Tiles'onClick={() => navigate('/tiles')}/>
-								</Tabs>
-							</Box>
-						</TabContext>
+						<Box sx={{border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
+							<Button label='Home' size='large' onClick={() => navigate('/')}>Home</Button>
+							<Button label='Options' size='large' onClick={() => navigate('/optionscreener')}>Options</Button>
+							<Button label='Tiles'size='large' onClick={() => navigate('/tiles')}>Tiles</Button>
+						</Box>
 					</Box>
 				</div>
 			</div>
