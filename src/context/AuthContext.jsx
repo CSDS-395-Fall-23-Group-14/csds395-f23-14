@@ -21,7 +21,7 @@ import { StorageContext } from './StorageContext';
  * @typedef AuthContext A context for managing authentication.
  * @property {() => boolean} isAuthenticated Returns whether a user is authenticated or not.
  * @property {() => boolean} isGoogleAuthenticated Returns whether a user is authenticated with Google.
- * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericSignup Creates a new user account with the provided email and password.
+ * @property {(firstName: any, lastName: any, email: any, password: any) => Promise<UserCredential>} genericSignup Creates a new user account with the provided email and password.
  * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericLogin Logs in a user with the provided email and password.
  * @property {() => Promise<UserCredential>} googleLogin Logs in a user with Google authentication.
  * @property {(password: string) => Promise<UserCredential>} reauthenticateGeneric Re-authenticates a user signed in with username and email.
@@ -72,11 +72,14 @@ function AuthContextProvider({ children }) {
 	
 	const isGoogleAuthenticated = () => isAuthenticated() && currUser.providerData.some((provider) => provider.providerId === 'google.com');
 	
-	const genericSignup = async (displayName, email, password) => {
+	const genericSignup = async (firstName, lastName, email, password) => {
 		try {
 			const userCred = await createUserWithEmailAndPassword(auth, email, password)
-			await updateProfile(userCred.user, { displayName: displayName });
-			await setUserDoc(userCred.user.uid, {});
+			await updateProfile(userCred.user, { displayName: firstName + ' ' +  lastName });
+			await setUserDoc(userCred.user.uid, {
+				first_name: firstName,
+				last_name: lastName
+			});
 			return userCred;
 		} catch (error) {
 			console.log(error);
@@ -132,7 +135,6 @@ function AuthContextProvider({ children }) {
 	
 	const updateUserAvatar = async (file) => {
 		const url = await uploadAvatar(file, currUser.uid);
-		console.log(url);
 		return await updateProfile(currUser, { photoURL: url });
 	}
 	

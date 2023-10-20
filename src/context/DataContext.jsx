@@ -26,6 +26,7 @@ const DataContext = createContext();
 function DataContextProvider({ children }) {
 	
 	const setUserDoc = async (uid, profile) => {
+		console.log(uid, profile);
 		const userDoc = doc(db, "users", uid);
 		return await setDoc(userDoc, profile);
 	}

@@ -8,6 +8,7 @@ import {
 	Avatar,
 	MenuItem,
 	IconButton,
+	Skeleton,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { CloudUpload, ArrowBack } from "@mui/icons-material";
@@ -36,9 +37,10 @@ function Profile() {
 	const navigate = useNavigate();
 	
 	const [error, setError] = useState(null);
-	const [profile, setProfile] = useState(null); // May not be needed
+	const [profile, setProfile] = useState({}); // May not be needed
+	const [profileLoading, setProfileLoading] = useState(true);
+	
 	const [imageLoading, setImageLoading] = useState(false);
-	const [profileLoading, setProfileLoading] = useState(false);
 	const [avatar, setAvatar] = useState(null);
 	const [dispName, setDispName] = useState(getUserDispName());
 	
@@ -49,7 +51,12 @@ function Profile() {
 	];
 	
 	useEffect(() => {
-		setProfile(async () => await getUserProfile());
+		const refreshProfile = async () => {
+			const prof = await getUserProfile();
+			setProfile(prof);
+			setProfileLoading(false);
+		}
+		refreshProfile();
 	}, [getUserProfile]);
 	
 	useEffect(() => {
@@ -70,19 +77,23 @@ function Profile() {
 		
 		const newPassword = data.get('new_password');
 		const oldPassword = data.get('old_password');
-		
-		if (data.get('first_name') !== '' || data.get('last_name') !== '') {
-			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
-			setDispName(getUserDispName());
-		}
-		
-		// handle user information update
-		await updateUserProfile({
+		const currentProfile = {
 			job: data.get('job'),
 			yearsInvesting: data.get('year_investing'),
 			organization: data.get('organization'),
 			portfolio: data.get('porfolio'),
-		});
+		};
+		
+		if (!isGoogleAuthenticated() && (data.get('first_name') !== '' || data.get('last_name') !== '')) {
+			currentProfile.first_name = data.get('first_name');
+			currentProfile.last_name = data.get('last_name');
+			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
+			setDispName(getUserDispName());
+		}
+		
+		
+		// handle user information update
+		await updateUserProfile(currentProfile);
 		
 		// handle password update
 		if (newPassword && !oldPassword)
@@ -176,37 +187,47 @@ function Profile() {
 						</Box>
 					}
 					<h3>{dispName}</h3>
-					<Box
-						component="form"
-						sx={{ alignItems:'center' }}
-						onSubmit={(event) => handleProfileUpdate(event)}
-					>
-						<Box sx={{ '& > :not(style)': { width: '49.5%' } }}>
-							<TextField
-								sx={{ mr: '0.5%', my: '0.5%' }}
-								margin='normal'
-								label='First Name'
-								name='first_name'
-								fullWidth
-								type='type'
-							/>
-							<TextField
-								sx={{ ml: '0.5%', my: '0.5%' }}
-								margin='normal'
-								label='Last Name'
-								name='last_name'
-								fullWidth
-								type='type'
-							/>
-						</Box>
-						{
-							isGoogleAuthenticated() ? null :
+					{
+						profileLoading ?
+						<Skeleton
+							variant="rounded"
+							width={100}
+							height={100}
+						/> :
+						<Box
+							component="form"
+							sx={{ alignItems:'center' }}
+							onSubmit={(event) => handleProfileUpdate(event)}
+						>
+							{
+								isGoogleAuthenticated() ? null :
 								<>
+									<Box sx={{ '& > :not(style)': { width: '49.5%' } }}>
+										<TextField
+											sx={{ mr: '0.5%', my: '0.5%' }}
+											margin='normal'
+											label='First Name'
+											name='first_name'
+											fullWidth
+											type='type'
+											defaultValue={profile.first_name}
+										/>
+										<TextField
+											sx={{ ml: '0.5%', my: '0.5%' }}
+											margin='normal'
+											label='Last Name'
+											name='last_name'
+											fullWidth
+											type='type'
+											defaultValue={profile.last_name}
+										/>
+									</Box>
 									<TextField
 										sx={{ my: '0.5%' }}
 										label='Email'
 										name='email'
 										type='text'
+										defaultValue={profile.email}
 										fullWidth
 									/>
 									{ error ? <Alert severity="error">{error}</Alert> : null }
@@ -227,58 +248,63 @@ function Profile() {
 										/>
 									</Box>
 								</>
-						}
-						<TextField
-							sx={{ my: '0.5%' }}
-							label='Job'
-							name='job'
-							type='text'
-							fullWidth
-						/>
-						<TextField
-							sx={{ my: '0.5%' }}
-							label='Organization'
-							name='organization'
-							type='text'
-							fullWidth
-						/>
-						<TextField
-							sx={{ my: '0.5%' }}
-							id="outlined-number"
-							name="year_investing"
-							label="Years of Investing"
-							type="number"
-							fullWidth
-						/>
-						<TextField
-							sx={{ my: '0.5%' }}
-							name="porfolio"
-							label="Porfolio Strategy"
-							fullWidth
-							select
-						>
-							{
-								portfolio?.map((option) =>
-									<MenuItem
-										key={option.value}
-										value={option.value}
-									>
-										{option.label}
-									</MenuItem>
-								)
 							}
-							</TextField>
-						<LoadingButton
-							type='submit'
-							margin='normal'
-							variant='contained'
-							loading={profileLoading}
-							sx={{ my: '0.5%' }}
-							fullWidth
-						>
-							Update Profile
-						</LoadingButton>
-					</Box>
+							<TextField
+								sx={{ my: '0.5%' }}
+								label='Job'
+								name='job'
+								type='text'
+								fullWidth
+								defaultValue={profile.job}
+							/>
+							<TextField
+								sx={{ my: '0.5%' }}
+								label='Organization'
+								name='organization'
+								type='text'
+								defaultValue={profile.organization}
+								fullWidth
+							/>
+							<TextField
+								sx={{ my: '0.5%' }}
+								id="outlined-number"
+								name="year_investing"
+								label="Years of Investing"
+								type="number"
+								fullWidth
+								defaultValue={profile.year_investing}
+							/>
+							<TextField
+								sx={{ my: '0.5%' }}
+								name="porfolio"
+								label="Porfolio Strategy"
+								fullWidth
+								select
+								defaultValue={profile.portfolio}
+							>
+								{
+									portfolio?.map((option) =>
+										<MenuItem
+											key={option.value}
+											value={option.value}
+										>
+											{option.label}
+										</MenuItem>
+									)
+								}
+								</TextField>
+							<LoadingButton
+								type='submit'
+								margin='normal'
+								variant='contained'
+								loading={profileLoading}
+								sx={{ my: '0.5%' }}
+								fullWidth
+							>
+								Update Profile
+							</LoadingButton>
+						</Box>
+					}
 				</Box>
 			</Grid>
 		</Grid>

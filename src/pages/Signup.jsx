@@ -54,13 +54,14 @@ function SignUp() {
 	const handleGenericSignup = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		const displayName = data.get('first_name') + " " + data.get('last_name');
+		const firstName = data.get('first_name')
+		const lastName = data.get('last_name');
 		const email = data.get('email');
 		const password = data.get('password');
 		
 		try {
 			console.log('generic signup')
-			genericSignup(displayName, email, password);
+			genericSignup(firstName, lastName, email, password);
 		} catch (error) {
 			switch (error.code) {
 				case 'auth/email-already-in-use':
