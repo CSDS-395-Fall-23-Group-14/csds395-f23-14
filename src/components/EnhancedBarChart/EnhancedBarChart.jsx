@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Card } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 
