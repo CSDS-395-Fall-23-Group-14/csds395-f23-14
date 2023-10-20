@@ -35,18 +35,30 @@ function Home() {
   
 	const fields = [
 		'datescraped', 'ticker', 'companyname', 'currentprice', 'shares',
-    'marketvalue', 'notionalvalue', 'assetclass', 'sector', 'weight',
+    'marketvalue', 'notionalvalue', 'assetclass', 'weight', 'sector',
 	];
 	
 	const headerNames = [
 		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Shares',
-		'Market Value', 'Notional Value', 'Asset Class', 'Sector', 'Weight',
+		'Market Value', 'Notional Value', 'Asset Class', 'Weight', 'Sector',
 	];
+  
+  const widths = [
+    0.5, 0.3, 1, 0.5, 0.4,
+    0.5, 0.5, 0.5, 0.4, 0.9,
+  ]
+  
+  const aligns = [
+    'left', 'center', 'center', 'center', 'center',
+    'center', 'center', 'center', 'center', 'left',
+  ]
 	
 	const columns = fields.map((_, i) => ({
 			field: fields[i],
 			headerName: headerNames[i],
-      flex: 1,
+      flex: widths[i],
+      align: aligns[i],
+      headerAlign: aligns[i],
 		})
   );
   

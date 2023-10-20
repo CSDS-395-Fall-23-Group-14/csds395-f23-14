@@ -19,6 +19,8 @@ import { StorageContext } from './StorageContext';
 
 /**
  * @typedef AuthContext A context for managing authentication.
+ * @property {() => boolean} isAuthenticated Returns whether a user is authenticated or not.
+ * @property {() => boolean} isGoogleAuthenticated Returns whether a user is authenticated with Google.
  * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericSignup Creates a new user account with the provided email and password.
  * @property {(email: string, password: string) => Promise<import('firebase/auth').UserCredential>} genericLogin Logs in a user with the provided email and password.
  * @property {() => Promise<UserCredential>} googleLogin Logs in a user with Google authentication.
@@ -65,6 +67,10 @@ function AuthContextProvider({ children }) {
 		});
 		return () => unsubscribe();
 	}, []);
+	
+	const isAuthenticated = () => currUser !== null
+	
+	const isGoogleAuthenticated = () => isAuthenticated() && currUser.providerData.some((provider) => provider.providerId === 'google.com');
 	
 	const genericSignup = async (displayName, email, password) => {
 		try {
@@ -145,6 +151,8 @@ function AuthContextProvider({ children }) {
 	return (
 		<AuthContext.Provider
 			value={{
+				isAuthenticated,
+				isGoogleAuthenticated,
 				genericSignup,
 				genericLogin,
 				googleLogin,

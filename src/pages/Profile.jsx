@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from "react-router";
 import {
 	TextField,
 	Box,
 	Grid,
-	Alert
+	Alert,
+	Avatar,
+	MenuItem,
+	IconButton,
 } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Avatar from '@mui/material/Avatar';
-import CloudUploadIcon from "@mui/icons-material/UploadFile";
+import { LoadingButton } from '@mui/lab';
+import { CloudUpload, ArrowBack } from "@mui/icons-material";
 
 import loginbg from '../images/loginbg.png';
 import { AuthContext } from '../context/AuthContext';
@@ -20,6 +22,7 @@ import { AuthContext } from '../context/AuthContext';
  */
 function Profile() {
 	const {
+		isGoogleAuthenticated,
 		reauthenticateGeneric,
 		getUserProfile,
 		updateUserProfile,
@@ -27,35 +30,31 @@ function Profile() {
 		updateUserAvatar,
 		getUserDispName,
 		updateUserDispName,
-		updateUserPassword,
-		currUser
+		updateUserPassword
 	} = useContext(AuthContext);
 	
-	console.log(currUser);
-	const isGoogleAuthenticated = currUser.providerData[0].providerId === 'google.com';
+	const navigate = useNavigate();
 	
-	const [ error, setError] = useState(null);
-	const [ profile, setProfile] = useState(null); // May not be needed
-	
+	const [error, setError] = useState(null);
+	const [profile, setProfile] = useState(null); // May not be needed
 	const [imageLoading, setImageLoading] = useState(false);
 	const [profileLoading, setProfileLoading] = useState(false);
-	const [avatar, setAvatar] = useState(getUserAvatar());
+	const [avatar, setAvatar] = useState(null);
 	const [dispName, setDispName] = useState(getUserDispName());
 	
 	const portfolio = [
 		{ value: "1", label: 'Conservative' },
 		{ value: "2", label: 'Moderate' },
-		{ value: "3", label: 'Growth' },
+		{ value: "3", label: 'Aggressive' },
 	];
-
 	
 	useEffect(() => {
 		setProfile(async () => await getUserProfile());
 	}, [getUserProfile]);
 	
-	const refreshAvatar = (() => {
+	useEffect(() => {
 		setAvatar(getUserAvatar());
-	});
+	}, [getUserAvatar])
 	
   /**
 	 * Handles the profile update
@@ -111,13 +110,12 @@ function Profile() {
 	
 	/**
 	 * Handles the avatar update
-	 * 
 	 * @param {File} file The image upload event
 	 */
 	const uploadImage = async (file) => {
 		setImageLoading(true);
 		await updateUserAvatar(file);
-		refreshAvatar();
+		setAvatar(getUserAvatar());
 		setImageLoading(false);
 	}
 	
@@ -127,18 +125,24 @@ function Profile() {
 			sx={{ height: '100vh' }}
 		>
 			<Grid
-				item md={7}
+				item
+				md='7'
 				sx={{
 					backgroundImage: `url(${loginbg})`,
 					backgroundSize: 'cover',
 					backgroundPosition: 'center'
 				}}
 			/>
-			<Grid item md={5}>
+			<Grid
+				item
+				md='5'
+			>
+				<IconButton onClick={() => navigate('/')}>
+					<ArrowBack sx={{ width: 35, height: 35 }}/>
+				</IconButton>
 				<Box
 					sx={{
-						my: 8,
-						mx: 4,
+						m: 4,
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
@@ -148,18 +152,18 @@ function Profile() {
 					<Avatar
 						alt="avatar"
 						src={avatar}
-						sx={{ width: 200, height: 200, marginBottom: 3 }}
+						sx={{ width: 150, height: 150 }}
 					/>
 					{
-						isGoogleAuthenticated ? <></> : 
+						isGoogleAuthenticated() ? null : 
 						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
 							<LoadingButton
+								sx={{ marginRight: "1rem" }}
 								component="label"
 								color="secondary"
 								variant="outlined"
-								startIcon={<CloudUploadIcon />}
+								startIcon={<CloudUpload />}
 								loading={imageLoading}
-								sx={{ marginRight: "1rem" }}
 							>
 								Upload Image
 								<input
@@ -177,8 +181,9 @@ function Profile() {
 						sx={{ alignItems:'center' }}
 						onSubmit={(event) => handleProfileUpdate(event)}
 					>
-						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
+						<Box sx={{ '& > :not(style)': { width: '49.5%' } }}>
 							<TextField
+								sx={{ mr: '0.5%', my: '0.5%' }}
 								margin='normal'
 								label='First Name'
 								name='first_name'
@@ -186,6 +191,7 @@ function Profile() {
 								type='type'
 							/>
 							<TextField
+								sx={{ ml: '0.5%', my: '0.5%' }}
 								margin='normal'
 								label='Last Name'
 								name='last_name'
@@ -193,75 +199,81 @@ function Profile() {
 								type='type'
 							/>
 						</Box>
+						{
+							isGoogleAuthenticated() ? null :
+								<>
+									<TextField
+										sx={{ my: '0.5%' }}
+										label='Email'
+										name='email'
+										type='text'
+										fullWidth
+									/>
+									{ error ? <Alert severity="error">{error}</Alert> : null }
+									<Box sx={{ '& > :not(style)': { my: '0.5%', width: '49.5%' } }}>
+										<TextField
+											sx={{ mr: '0.5%'}}
+											label='Old Password'
+											name='old_password'
+											type='password'
+											fullWidth
+										/>
+										<TextField
+											sx={{ ml: '0.5%'}}
+											label='New Password'
+											name='new_password'
+											type='password'
+											fullWidth
+										/>
+									</Box>
+								</>
+						}
 						<TextField
-							margin='normal'
-							label='Email'
-							name='email'
-							type='text'
-							disabled={true}
-							fullWidth
-						/>
-						{error ? <Alert severity="error">{error}</Alert> : null}
-						<Box sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
-							<TextField
-								margin='normal'
-								label='Old Password'
-								name='old_password'
-								type='password'
-								fullWidth
-							/>
-							<TextField
-								margin='normal'
-								label='New Password'
-								name='new_password'
-								type='password'
-								fullWidth
-							/>
-						</Box>
-						<TextField
-							margin='normal'
+							sx={{ my: '0.5%' }}
 							label='Job'
 							name='job'
 							type='text'
 							fullWidth
 						/>
 						<TextField
-							margin='normal'
+							sx={{ my: '0.5%' }}
 							label='Organization'
 							name='organization'
 							type='text'
 							fullWidth
 						/>
 						<TextField
-							margin='normal'
-							name="year_investing"
+							sx={{ my: '0.5%' }}
 							id="outlined-number"
+							name="year_investing"
 							label="Years of Investing"
 							type="number"
-							InputLabelProps={{
-								shrink: true,
-							}}
 							fullWidth
 						/>
 						<TextField
+							sx={{ my: '0.5%' }}
 							name="porfolio"
-							margin='normal'
+							label="Porfolio Strategy"
 							fullWidth
 							select
-							label="Porfolio"
 						>
-							{portfolio?.map((option) => (
-								<MenuItem key={option.value} value={option.value}>
-									{option.label}
-								</MenuItem>
-							))}
+							{
+								portfolio?.map((option) =>
+									<MenuItem
+										key={option.value}
+										value={option.value}
+									>
+										{option.label}
+									</MenuItem>
+								)
+							}
 							</TextField>
 						<LoadingButton
 							type='submit'
 							margin='normal'
 							variant='contained'
 							loading={profileLoading}
-							sx={{ my: 2 }}
+							sx={{ my: '0.5%' }}
 							fullWidth
 						>
 							Update Profile

@@ -11,9 +11,9 @@ import { AuthContext } from '../context/AuthContext';
  * @returns {React.ReactNode} The rendered React component.
  */
 const Protected = ({ children }) => {
-  const { currUser } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   
-  if (!currUser)
+  if (!isAuthenticated())
     // Redirect to the login page if the user is not authenticated.
     return <Navigate to='/login' />;
 

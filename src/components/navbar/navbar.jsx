@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import {
 	Box,
@@ -6,14 +6,14 @@ import {
 	Tabs,
 	Button,
 	IconButton,
-	TextField
+	TextField,
+	Avatar,
 } from '@mui/material';
 import {
-	Person,
 	Brightness4,
-	Brightness7
+	Brightness7,
 } from '@mui/icons-material';
-import TabContext from '@mui/lab/TabContext';
+import { TabContext } from '@mui/lab';
 
 import logo from "../../images/EZ$-logo-transparent.png";
 import "./navbar.css";
@@ -23,8 +23,13 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 function NavBar() {
 	const navigate = useNavigate();
-  const { logOut } = useContext(AuthContext);
+  const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
+	const [avatar, setAvatar] = useState(null);
+	
+	useEffect(() => {
+		setAvatar(getUserAvatar());
+	}, [getUserAvatar])
 	
 	return(
 		<div className="wrapper">
@@ -32,11 +37,9 @@ function NavBar() {
 				<div className="logo-wrapper"> 
 					<img
 						src={logo}
-						height={60}
+						height={120}
 						alt="logo"
-						style={{
-							filter: themeMode === "dark" ? 'invert(1)' : ''
-						}}
+						style={{ filter: themeMode === "dark" ? 'invert(1)' : '' }}
 					/>
 				</div>
 			</div>
@@ -73,24 +76,28 @@ function NavBar() {
 			</div>
 			<div className="navbar-right">
 				<div className="theme-button">
-					<IconButton
-						sx={{ ml: 1 }}
-						onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-					>
-						{themeMode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+					<IconButton onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}>
+						{
+							themeMode === 'dark' ?
+							<Brightness7 sx={{ width: 35, height: 35 }} /> :
+							<Brightness4 sx={{ width: 35, height: 35 }} />
+						}
 					</IconButton>
 				</div>
-				
 				<div className="user-icon">
 					<IconButton onClick={() => navigate('/profile')}>
-						<Person fontSize="large"/>
+						<Avatar
+							alt="avatar"
+							src={avatar}
+							sx={{ width: 35, height: 35 }}
+						/>
 					</IconButton>
 				</div>
-				
 				<div className="logout-button">
 					<Button
 						variant="outlined"
-						onClick={() => logOut()}>
+						onClick={() => logOut()}
+					>
 						Log Out
 					</Button>
 				</div>

@@ -18,7 +18,6 @@ import Tiles from './pages/Tiles';
 
 /**
  * The App component for displaying the app.
- * 
  * @component
  * @returns {JSX.Element} The rendered React component.
  */

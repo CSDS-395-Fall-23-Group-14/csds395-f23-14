@@ -13,6 +13,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import logo from '../images/EZ$-logo-transparent.png';
 import loginbg from '../images/loginbg.png';
 import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 /**
  * The Login component for user authentication.
@@ -22,6 +23,7 @@ import { AuthContext } from '../context/AuthContext';
  */
 function Login() {
 	const { genericLogin, googleLogin, currUser } = useContext(AuthContext);
+	const { themeMode } = useContext(ThemeContext);
 	const [isWrongPass, setIsWrongPass] = useState(false);
 	
 	/**
@@ -84,7 +86,12 @@ function Login() {
 						textAlign: 'center'
 					}}
 				>
-					<img src={logo} height={200} alt='logo' />
+					<img
+						src={logo}
+						height={200}
+						alt='logo'
+						style={{ filter: themeMode === "dark" ? 'invert(1)' : '' }}
+					/>
 					<h1>Log In</h1>
 					<Box
 						component='form'

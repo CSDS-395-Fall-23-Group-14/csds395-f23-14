@@ -26,6 +26,7 @@ function EnhancedTable({ columns, rows }) {
       slots={{
         toolbar: GridToolbar,
       }}
+      HorizontalContentAlignment='Center'
     />
   );
 }
