@@ -88,7 +88,7 @@ function Home() {
           >
             {isLoading ?
               <Skeleton
-                variant="rectangular"
+                variant="rounded"
                 width={1200}
                 height={300}
               /> :

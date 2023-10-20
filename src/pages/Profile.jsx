@@ -37,18 +37,13 @@ function Profile() {
 	const navigate = useNavigate();
 	
 	const [error, setError] = useState(null);
-	const [profile, setProfile] = useState({}); // May not be needed
+	const [profile, setProfile] = useState({});
 	const [profileLoading, setProfileLoading] = useState(true);
+	const [profileUpdating, setProfileUpdating] = useState(false);
 	
-	const [imageLoading, setImageLoading] = useState(false);
-	const [avatar, setAvatar] = useState(null);
 	const [dispName, setDispName] = useState(getUserDispName());
-	
-	const portfolio = [
-		{ value: "1", label: 'Conservative' },
-		{ value: "2", label: 'Moderate' },
-		{ value: "3", label: 'Aggressive' },
-	];
+	const [avatar, setAvatar] = useState(getUserAvatar());
+	const [imageUpdating, setImageUpdating] = useState(false);
 	
 	useEffect(() => {
 		const refreshProfile = async () => {
@@ -59,10 +54,6 @@ function Profile() {
 		refreshProfile();
 	}, [getUserProfile]);
 	
-	useEffect(() => {
-		setAvatar(getUserAvatar());
-	}, [getUserAvatar])
-	
   /**
 	 * Handles the profile update
 	 * Calls the updateUser and updatePassword function with user-provided info and password.
@@ -72,12 +63,10 @@ function Profile() {
 	 */
 	const handleProfileUpdate = async (event) => {
 		event.preventDefault();
-		setProfileLoading(true);
+		setProfileUpdating(true);
 		const data = new FormData(event.currentTarget);
 		
-		const newPassword = data.get('new_password');
-		const oldPassword = data.get('old_password');
-		const currentProfile = {
+		const newProfile = {
 			job: data.get('job'),
 			yearsInvesting: data.get('year_investing'),
 			organization: data.get('organization'),
@@ -85,21 +74,21 @@ function Profile() {
 		};
 		
 		if (!isGoogleAuthenticated() && (data.get('first_name') !== '' || data.get('last_name') !== '')) {
-			currentProfile.first_name = data.get('first_name');
-			currentProfile.last_name = data.get('last_name');
+			newProfile.first_name = data.get('first_name');
+			newProfile.last_name = data.get('last_name');
 			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
 			setDispName(getUserDispName());
 		}
 		
-		
 		// handle user information update
-		await updateUserProfile(currentProfile);
+		await updateUserProfile(newProfile);
 		
 		// handle password update
-		if (newPassword && !oldPassword)
+		const newPassword = data.get('new_password');
+		const oldPassword = data.get('old_password');
+		if (!isGoogleAuthenticated() && newPassword && !oldPassword)
 			setError('Missing current password');
-		
-		if (newPassword && oldPassword ) {
+		if (!isGoogleAuthenticated() && newPassword && oldPassword ) {
 			// Re-authenticate the user (password change requires recent sign in)
 			await reauthenticateGeneric(oldPassword);
 			
@@ -116,7 +105,8 @@ function Profile() {
 				}
 			}
 		}
-		setProfileLoading(false);
+		
+		setProfileUpdating(false);
 	}
 	
 	/**
@@ -124,10 +114,10 @@ function Profile() {
 	 * @param {File} file The image upload event
 	 */
 	const uploadImage = async (file) => {
-		setImageLoading(true);
+		setImageUpdating(true);
 		await updateUserAvatar(file);
 		setAvatar(getUserAvatar());
-		setImageLoading(false);
+		setImageUpdating(false);
 	}
 	
 	return (
@@ -174,7 +164,7 @@ function Profile() {
 								color="secondary"
 								variant="outlined"
 								startIcon={<CloudUpload />}
-								loading={imageLoading}
+								loading={imageUpdating}
 							>
 								Upload Image
 								<input
@@ -189,11 +179,15 @@ function Profile() {
 					<h3>{dispName}</h3>
 					{
 						profileLoading ?
-						<Skeleton
-							variant="rounded"
-							width={100}
-							height={100}
-						/> :
+						<Box sx={{ width: '100%' }}>
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+							<Skeleton variant='text' sx={{ width: '100%' }} />
+						</Box> :
 						<Box
 							component="form"
 							sx={{ alignItems:'center' }}
@@ -283,7 +277,11 @@ function Profile() {
 								defaultValue={profile.portfolio}
 							>
 								{
-									portfolio?.map((option) =>
+									[
+										{ value: "1", label: 'Conservative' },
+										{ value: "2", label: 'Moderate' },
+										{ value: "3", label: 'Aggressive' },
+									].map((option) =>
 										<MenuItem
 											key={option.value}
 											value={option.value}
@@ -292,12 +290,12 @@ function Profile() {
 										</MenuItem>
 									)
 								}
-								</TextField>
+							</TextField>
 							<LoadingButton
 								type='submit'
 								margin='normal'
 								variant='contained'
-								loading={profileLoading}
+								loading={profileUpdating}
 								sx={{ my: '0.5%' }}
 								fullWidth
 							>
