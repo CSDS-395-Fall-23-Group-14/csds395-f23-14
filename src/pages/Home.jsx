@@ -4,10 +4,11 @@ import { Box } from '@mui/material';
 
 import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
-import BarChart from '../components/BarChart/BarChart';
+import EnhancedBarChart from '../components/EnhancedBarChart/EnhancedBarChart';
 
 import { useTheme } from '@mui/material/styles';
 import { DataContext } from '../context/DataContext';
+import { Skeleton } from '@mui/material';
 
 /**
  * The Home component representing the main page of the application.
@@ -24,9 +25,12 @@ function Home() {
 	const [isLoading, setIsLoading] = useState(true); // Potential for a loading animation
 	
 	useEffect(() => {
-		const fetchData = async () => setData(await get25Stocks());
+		const fetchData = async () => {
+      const stockData = await get25Stocks();
+      setData(stockData);
+      setIsLoading(false);
+    };
 		fetchData();
-		setIsLoading(false);
 	}, [get25Stocks]);
   
 	const fields = [
@@ -41,7 +45,8 @@ function Home() {
 	
 	const columns = fields.map((_, i) => ({
 			field: fields[i],
-			headerName: headerNames[i]
+			headerName: headerNames[i],
+      flex: 1,
 		})
   );
   
@@ -65,27 +70,28 @@ function Home() {
           <Box sx={{borderBottom: 1, width: "100%", marginBottom: "4%"}} >
             <h1 className="screener-h1">Stock Screener</h1>
           </Box>
-          <div className='barCharts'>
-            <BarChart
-              data={data}
-              width={450}
-              height={300}
-              property='currentprice'
-            />
-            <BarChart
-              data={data}
-              width={450}
-              height={300}
-              property='shares'
-            />
-            <BarChart
-              data={data}
-              width={450}
-              height={300}
-              property='marketvalue'
-            />
-          </div>
-          <EnhancedTable columns={columns} rows={data} />
+          <Box
+            className='barCharts'
+            margin='auto'
+          >
+            {isLoading ?
+              <Skeleton
+                variant="rectangular"
+                width={1200}
+                height={300}
+              /> :
+              <EnhancedBarChart
+                data={data}
+                property='currentprice'
+                width={1200}
+                height={300}
+              />
+            }
+          </Box>
+          <EnhancedTable
+            columns={columns}
+            rows={data}
+          />
         </div>
       </div>
     </>

@@ -13,22 +13,20 @@ import './enhancedtable.css';
  */
 function EnhancedTable({ columns, rows }) {
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        slots={{
-          toolbar: GridToolbar,
-        }}
-      />
-    </div>
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 10 },
+        },
+      }}
+      pageSizeOptions={[5, 10]}
+      checkboxSelection
+      slots={{
+        toolbar: GridToolbar,
+      }}
+    />
   );
 }
 

@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.14.9",
     "@mui/lab": "^5.0.0-alpha.144",
     "@mui/material": "^5.14.9",
+    "@mui/x-charts": "^6.0.0-alpha.15",
     "@mui/x-data-grid": "^6.16.2",
     "@mui/x-data-grid-generator": "^6.16.0",
     "@mui/x-data-grid-pro": "^6.16.0",
