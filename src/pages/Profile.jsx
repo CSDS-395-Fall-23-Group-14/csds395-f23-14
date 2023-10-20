@@ -36,7 +36,7 @@ function Profile() {
 	const navigate = useNavigate();
 	
 	const [error, setError] = useState(null);
-	const [profile, setProfile] = useState(null); // May not be needed
+	const [profile, setProfile] = useState({first_name: '', last_name: ''}); // May not be needed
 	const [imageLoading, setImageLoading] = useState(false);
 	const [profileLoading, setProfileLoading] = useState(false);
 	const [avatar, setAvatar] = useState(null);
@@ -49,8 +49,18 @@ function Profile() {
 	];
 	
 	useEffect(() => {
-		setProfile(async () => await getUserProfile());
-	}, [getUserProfile]);
+		console.log(profile);
+		console.log("use effect");
+		const refreshProfile = async () => {
+			const prof = await getUserProfile();
+			console.log(prof);
+			setProfile(prof);
+			console.log(profile);
+			console.log(profile.first_name);
+	    }
+	    refreshProfile();
+		// setProfile(async () => await getUserProfile());
+	}, []);
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -70,19 +80,23 @@ function Profile() {
 		
 		const newPassword = data.get('new_password');
 		const oldPassword = data.get('old_password');
-		
-		if (data.get('first_name') !== '' || data.get('last_name') !== '') {
-			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
-			setDispName(getUserDispName());
-		}
-		
-		// handle user information update
-		await updateUserProfile({
+		const currentProfile = {
 			job: data.get('job'),
 			yearsInvesting: data.get('year_investing'),
 			organization: data.get('organization'),
 			portfolio: data.get('porfolio'),
-		});
+		};
+		
+		if (data.get('first_name') !== '' || data.get('last_name') !== '') {
+			currentProfile.first_name = data.get('first_name');
+			currentProfile.last_name = data.get('last_name');
+			await updateUserDispName(data.get('first_name') + ' ' +  data.get('last_name'));
+			setDispName(getUserDispName());
+		}
+		
+		
+		// handle user information update
+		await updateUserProfile(currentProfile);
 		
 		// handle password update
 		if (newPassword && !oldPassword)
@@ -120,6 +134,7 @@ function Profile() {
 	}
 	
 	return (
+
 		<Grid
 			container
 			sx={{ height: '100vh' }}
@@ -189,6 +204,7 @@ function Profile() {
 								name='first_name'
 								fullWidth
 								type='type'
+								defaultValue="{profile.first_name}"
 							/>
 							<TextField
 								sx={{ ml: '0.5%', my: '0.5%' }}
@@ -197,6 +213,7 @@ function Profile() {
 								name='last_name'
 								fullWidth
 								type='type'
+								defaultValue={profile.last_name}
 							/>
 						</Box>
 						{
@@ -207,6 +224,7 @@ function Profile() {
 										label='Email'
 										name='email'
 										type='text'
+										defaultValue={profile.email}
 										fullWidth
 									/>
 									{ error ? <Alert severity="error">{error}</Alert> : null }
@@ -234,12 +252,14 @@ function Profile() {
 							name='job'
 							type='text'
 							fullWidth
+							defaultValue={profile.job}
 						/>
 						<TextField
 							sx={{ my: '0.5%' }}
 							label='Organization'
 							name='organization'
 							type='text'
+							defaultValue={profile.organization}
 							fullWidth
 						/>
 						<TextField
@@ -249,6 +269,7 @@ function Profile() {
 							label="Years of Investing"
 							type="number"
 							fullWidth
+							defaultValue={profile.year_investing}
 						/>
 						<TextField
 							sx={{ my: '0.5%' }}
@@ -256,6 +277,7 @@ function Profile() {
 							label="Porfolio Strategy"
 							fullWidth
 							select
+							defaultValue={profile.portfolio}
 						>
 							{
 								portfolio?.map((option) =>
@@ -282,6 +304,7 @@ function Profile() {
 				</Box>
 			</Grid>
 		</Grid>
+
   )
 }
 
