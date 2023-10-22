@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Navbar from '../components/NavBar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
+import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 
 import {
   Box,
-  Stack,
   Grid,
   Typography,
 } from '@mui/material';
@@ -24,6 +24,7 @@ const names = [
  * @returns {JSX.Element} The rendered React component.
  */
 function Tiles() {
+  const [loading, setLoading] = useState(true);
   
   return (
     <>
@@ -45,6 +46,10 @@ function Tiles() {
               >
                 Shopping Cart
               </Typography>
+              <EnhancedTable
+                autoHeight
+                loading={loading}
+              />
             </Grid>
             <Grid item xs={7}>
               <Grid container spacing={2}>

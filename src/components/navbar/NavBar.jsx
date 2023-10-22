@@ -6,10 +6,14 @@ import {
 	IconButton,
 	TextField,
 	Avatar,
+	Badge,
+	Modal,
+	Typography
 } from '@mui/material';
 import {
 	Brightness4,
 	Brightness7,
+	ShoppingCartOutlined
 } from '@mui/icons-material';
 
 import logo from "../../images/EZ$-logo-transparent.png";
@@ -18,11 +22,15 @@ import "./navbar.css";
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeContext } from '../../context/ThemeContext';
 
+import EnhancedTable from '../EnhancedTable/EnhancedTable';
+
 function NavBar() {
 	const navigate = useNavigate();
   const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	const [avatar, setAvatar] = useState(null);
+	
+	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -42,7 +50,7 @@ function NavBar() {
 			</div>
 			<div className="navbar-center">
 				<div className="search-wrapper">
-					<Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+					<Box sx={{ display: 'flex', alignItems: 'flex-end', pr: '1rem' }}>
 						<TextField
 							InputProps={{
 								sx: {
@@ -57,18 +65,23 @@ function NavBar() {
 						/>
 					</Box>
 				</div>
-				<div className="tab-menu">
-					<Box sx={{ width:'100%'}}>
-						<Box sx={{border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
-							<Button label='Home' size='large' onClick={() => navigate('/')}>Home</Button>
-							<Button label='Options' size='large' onClick={() => navigate('/optionscreener')}>Options</Button>
-							<Button label='Tiles'size='large' onClick={() => navigate('/tiles')}>Tiles</Button>
-						</Box>
+				<div>
+					<Box sx={{ width:'100%', border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
+						<Button label='Home' size='large' onClick={() => navigate('/')}>Home</Button>
+						<Button label='Options' size='large' onClick={() => navigate('/options')}>Options</Button>
+						<Button label='Tiles'size='large' onClick={() => navigate('/tiles')}>Tiles</Button>
 					</Box>
 				</div>
 			</div>
 			<div className="navbar-right">
-				<div className="theme-button">
+				<div className="cart-button" sx={{ pl: '1rem' }}>
+					<IconButton onClick={() => setShoppingCartOpen(true)}>
+  					<Badge badgeContent={1} color="secondary">
+							<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
+  					</Badge>
+					</IconButton>
+				</div>
+				<div className="theme-button" sx={{ pl: '1rem' }}>
 					<IconButton onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}>
 						{
 							themeMode === 'dark' ?
@@ -77,7 +90,7 @@ function NavBar() {
 						}
 					</IconButton>
 				</div>
-				<div className="user-icon">
+				<div className="user-icon" sx={{ pl: '1rem' }}>
 					<IconButton onClick={() => navigate('/profile')}>
 						<Avatar
 							alt="avatar"
@@ -86,7 +99,7 @@ function NavBar() {
 						/>
 					</IconButton>
 				</div>
-				<div className="logout-button">
+				<div className="logout-button" sx={{ pl: '1rem' }}>
 					<Button
 						variant="outlined"
 						onClick={() => logOut()}
@@ -95,6 +108,33 @@ function NavBar() {
 					</Button>
 				</div>
 			</div>
+			<Modal
+				open={shoppingCartOpen}
+				onClose={() => setShoppingCartOpen(false)}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description"
+			>
+				<Box
+					sx={{
+						position: 'absolute',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
+						bgcolor: 'background.paper',
+						boxShadow: 24,
+						p: 4
+					}}
+					textAlign='center'
+				>
+					<Typography variant="h5" component="h2" gutterBottom>
+						Shopping Cart
+					</Typography>
+					<EnhancedTable
+						autoHeight
+						loading={true}
+					/>
+				</Box>
+			</Modal>
 		</div>
 	);
 }

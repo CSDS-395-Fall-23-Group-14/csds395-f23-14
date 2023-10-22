@@ -9,7 +9,7 @@ import {
 
 import { ThemeContext } from '../../context/ThemeContext';
 
-function HedgeFinderTile({ name, src, height }) {
+function HedgeFinderTile({ name, src }) {
   const { themeMode } = useContext(ThemeContext);
   
   return (

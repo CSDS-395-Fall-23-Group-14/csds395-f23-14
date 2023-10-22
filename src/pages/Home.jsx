@@ -90,6 +90,8 @@ function Home() {
           <EnhancedTable
             columns={columns}
             rows={data}
+            loading={isLoading}
+            toolbar
           />
         </div>
       </div>

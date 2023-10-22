@@ -52,7 +52,7 @@ function App() {
               
               {/* OptionsScreener - Password protected */}
               <Route
-                path='/optionscreener'
+                path='/options'
                 element={
                   <Protected>
                     <Options />

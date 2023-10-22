@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
 
 import NavBar from '../components/NavBar/NavBar';
 import OptionScreener from '../components/OptionScreener/OptionScreener';

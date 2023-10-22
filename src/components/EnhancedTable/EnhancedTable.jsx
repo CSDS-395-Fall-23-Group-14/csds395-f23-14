@@ -11,22 +11,22 @@ import './enhancedtable.css';
  * @param {Array} props.data The data to be processed and displayed in the table.
  * @returns {JSX.Element} The rendered React component.
  */
-function EnhancedTable({ columns, rows }) {
+function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
   return (
     <DataGrid
-      rows={rows}
-      columns={columns}
+      rows={rows ? rows : []}
+      columns={columns ? columns : []}
       initialState={{
         pagination: {
-          paginationModel: { page: 0, pageSize: 10 },
-        },
+          paginationModel: { page: 0, pageSize: 10 }
+        }
       }}
       pageSizeOptions={[5, 10]}
       checkboxSelection
-      slots={{
-        toolbar: GridToolbar,
-      }}
+      slots={{ toolbar: toolbar ? GridToolbar : null }}
       HorizontalContentAlignment='Center'
+      loading={loading}
+      autoHeight={autoHeight}
     />
   );
 }

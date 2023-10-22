@@ -25,15 +25,6 @@
     display: flex;
 }
 
-.search-wrapper {
-    display: flex;
-    padding-right: 1rem;
-}
-
-.tab-menu {
-    display: flex;
-}
-
 .user-icon {
     padding-right: 1rem;
 }
