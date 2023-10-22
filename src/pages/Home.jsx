@@ -66,12 +66,13 @@ function Home() {
       </div>
       <div className='body'>
         <div className="screener-wrapper">
-          <Box sx={{borderBottom: 1, width: "100%", marginBottom: "4%"}} >
+          <Box sx={{borderBottom: 1}}>
             <h1 className="screener-h1">Stock Screener</h1>
           </Box>
           <Box
             className='barCharts'
-            margin='auto'
+            m='auto'
+            sx={{py: "1%"}}
           >
             {isLoading ?
               <Skeleton
@@ -87,12 +88,16 @@ function Home() {
               />
             }
           </Box>
-          <EnhancedTable
-            columns={columns}
-            rows={data}
-            loading={isLoading}
-            toolbar
-          />
+          <Box
+            sx={{borderTop: 1, py: "1%"}}
+          >
+            <EnhancedTable
+              columns={columns}
+              rows={data}
+              loading={isLoading}
+              toolbar
+            />
+          </Box>
         </div>
       </div>
     </>

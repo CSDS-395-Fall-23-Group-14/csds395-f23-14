@@ -33,10 +33,14 @@ function Tiles() {
       </div>
       <div className='body'>
         <div className="screener-wrapper">
-          <Box sx={{ borderBottom: 1, width: "100%", marginBottom: "4%" }}>
+          <Box sx={{borderBottom: 1}}>
             <h1 className="screener-h1">Tiles</h1>
           </Box>
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2} 
+            sx={{py: "1%"}}
+          >
             <Grid item xs={5}>
               <Typography
                 gutterBottom
