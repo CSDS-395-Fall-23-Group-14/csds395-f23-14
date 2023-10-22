@@ -3,12 +3,6 @@
   font-weight: 400;
 }
 
-.screener-wrapper {
-  margin: 0 6% 0 6%;
-  display: flex;
-  flex-direction: column;
-}
-
 .screener-buttons {
   display: flex;
   flex-direction: row;

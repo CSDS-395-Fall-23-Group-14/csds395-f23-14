@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import {
 	Box,
-	Tab,
-	Tabs,
 	Button,
 	IconButton,
 	TextField,
@@ -13,7 +11,6 @@ import {
 	Brightness4,
 	Brightness7,
 } from '@mui/icons-material';
-import { TabContext } from '@mui/lab';
 
 import logo from "../../images/EZ$-logo-transparent.png";
 import "./navbar.css";

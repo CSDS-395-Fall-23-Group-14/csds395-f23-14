@@ -6,7 +6,6 @@ import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 import EnhancedBarChart from '../components/EnhancedBarChart/EnhancedBarChart';
 
-import { useTheme } from '@mui/material/styles';
 import { DataContext } from '../context/DataContext';
 import { Skeleton } from '@mui/material';
 
@@ -17,8 +16,6 @@ import { Skeleton } from '@mui/material';
  * @returns {JSX.Element} The rendered React component.
  */
 function Home() {
-  const theme = useTheme();
-  
 	const { get25Stocks } = useContext(DataContext);
 	
 	const [data, setData] = useState([]);
@@ -64,20 +61,10 @@ function Home() {
   
   return (
     <>
-      <div
-        className='header'
-        style={{
-          backgroundColor: theme.palette.background.default
-        }}
-      >
+      <div className='header'>
         <NavBar />
       </div>
-      <div
-        className='body'
-        style={{
-          backgroundColor: theme.palette.background.default
-        }}
-      >
+      <div className='body'>
         <div className="screener-wrapper">
           <Box sx={{borderBottom: 1, width: "100%", marginBottom: "4%"}} >
             <h1 className="screener-h1">Stock Screener</h1>

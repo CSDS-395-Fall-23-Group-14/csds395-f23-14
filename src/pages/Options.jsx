@@ -9,20 +9,12 @@ import OptionScreener from '../components/OptionScreener/OptionScreener';
  * @component
  */
 function Options() {
-  const theme = useTheme();
-  
   return (
     <>
-      <div
-        className='header'
-        style={{ backgroundColor: theme.palette.background.default }}
-      >
+      <div className='header'>
         <NavBar />
       </div>
-      <div
-        className='body'
-        style={{ backgroundColor: theme.palette.background.default }}
-      >
+      <div className='body'>
         <OptionScreener/>
       </div>
     </>
