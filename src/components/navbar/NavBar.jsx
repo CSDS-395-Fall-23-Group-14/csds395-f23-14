@@ -16,7 +16,7 @@ import {
 	ShoppingCartOutlined
 } from '@mui/icons-material';
 
-import logo from "../../images/EZ$-logo-transparent.png";
+import logo from "../../images/EZ$-logo-navbar.png";
 import "./navbar.css";
 
 import { AuthContext } from '../../context/AuthContext';
@@ -42,7 +42,7 @@ function NavBar() {
 				<div className="logo-wrapper"> 
 					<img
 						src={logo}
-						height={120}
+						height={80}
 						alt="logo"
 						style={{ filter: themeMode === "dark" ? 'invert(1)' : '' }}
 					/>
