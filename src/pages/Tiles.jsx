@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Navbar from '../components/NavBar/NavBar';
+import Navbar from '../components/navbar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 

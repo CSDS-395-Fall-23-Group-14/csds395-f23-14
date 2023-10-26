@@ -6,10 +6,10 @@ import ThemeContextProvider from './context/ThemeContext';
 import DataContextProvider from './context/DataContext';
 import StorageContextProvider from './context/StorageContext';
 import AuthContextProvider from './context/AuthContext';
-import Protected from './components/Protected';
+import Protected from './components/Protected'; 
 
 /* Pages */
-import Login from './pages/Login';
+import Login from './pages/Login.jsx';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
