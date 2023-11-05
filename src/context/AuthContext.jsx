@@ -53,7 +53,13 @@ const AuthContext = createContext();
 function AuthContextProvider({ children }) {
 	const [currUser, setCurrUser] = useState(auth.currentUser);
 	const { uploadAvatar } = useContext(StorageContext);
-	const { setUserDoc, getUserDoc } = useContext(DataContext);
+	const {
+		setUserDoc,
+		getUserDoc,
+		addToShoppingCart,
+		removeFromShoppingCart,
+		getShoppingCart
+	} = useContext(DataContext);
 	
 	useEffect(() => {
 		// Grab user cred data from localStorage to avoid waiting for the server
@@ -150,6 +156,19 @@ function AuthContextProvider({ children }) {
 		return await updatePassword(currUser, password);
 	}
 	
+	const addToUserShoppingCart = async (ids) => {
+		return await addToShoppingCart(currUser.uid, ids);
+	}
+	
+	const removeFromUserShoppingCart = async (ids) => {
+		return await removeFromShoppingCart(currUser.uid, ids);
+	}
+	
+	const getUserShoppingCart = async () => {
+		const shoppingCart = await getShoppingCart(currUser.uid);
+		return shoppingCart;
+	}
+	
 	return (
 		<AuthContext.Provider
 			value={{
@@ -168,6 +187,9 @@ function AuthContextProvider({ children }) {
 				getUserDispName,
 				updateUserDispName,
 				updateUserPassword,
+				addToUserShoppingCart,
+				removeFromUserShoppingCart,
+				getUserShoppingCart,
 				currUser
 			}}
 		>

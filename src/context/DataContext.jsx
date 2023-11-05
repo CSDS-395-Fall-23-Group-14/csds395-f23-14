@@ -1,5 +1,17 @@
 import React, { createContext } from 'react';
-import { collection, query, getDoc, getDocs, limit, setDoc, doc } from "firebase/firestore";
+import {
+	collection,
+	query,
+	getDoc,
+	getDocs,
+	limit,
+	setDoc,
+	doc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+	where
+} from "firebase/firestore";
 import { db } from '../firebaseConfig';
 
 /**
@@ -8,6 +20,10 @@ import { db } from '../firebaseConfig';
  * @property {(uid: string) => Promise<object>} getUserDoc Returns the data in specified user's document.
  * @property {() => Promise<DocumentData[]>} get25Stocks Returns the first 25 stocks as an array.
  * @property {() => Promise<DocumentData[]>} get25Options Returns the first 25 options as an array.
+ * @property {(uid: string, ids: string[]) => Promise<void>} addToShoppingCart Adds the specified option IDs to the user's shopping cart.
+ * @property {(uid: string, ids: string[]) => Promise<void>} removeFromShoppingCart Removes the specified option IDs from the user's shopping cart
+ * @property {(uid: string) => Promise<DocumentData[]>} getShoppingCart Returns the user's shopping chart.
+ * @property {(ids: string[]) => Promise<DocumentData[]>} getOptions Returns the Options whose IDs are specified.
  */
 
 /**
@@ -26,7 +42,6 @@ const DataContext = createContext();
 function DataContextProvider({ children }) {
 	
 	const setUserDoc = async (uid, profile) => {
-		console.log(uid, profile);
 		const userDoc = doc(db, "users", uid);
 		return await setDoc(userDoc, profile);
 	}
@@ -58,7 +73,34 @@ function DataContextProvider({ children }) {
 		});
 		return data;
 	}
-
+	
+	const addToShoppingCart = async (uid, ids) => {
+		const userDoc = doc(db, "users", uid);
+		return await updateDoc(userDoc, { shoppingCart: arrayUnion(ids) });
+	}
+	
+	const removeFromShoppingCart = async (uid, ids) => {
+		const userDoc = doc(db, "users", uid);
+		return await updateDoc(userDoc, { shoppingCart: arrayRemove(ids) });
+	}
+	
+	const getShoppingCart = async (uid) => {
+		const userDoc = doc(db, "users", uid);
+		const snapshot = await getDoc(userDoc);
+		return snapshot.data;
+	}
+	
+	const getOptions = async (ids) => {
+		const q = query(collection(db, "options"), where("optionid", 'in', ids));
+		const snapshot = await getDocs(q);
+		const data = snapshot.docs.map(option => option.data());
+		let id = 0;
+		data.forEach(element => {
+			element.id = id++;
+		});
+		return data;
+	}
+	
 	return (
 		<DataContext.Provider
 			value={{
@@ -66,6 +108,10 @@ function DataContextProvider({ children }) {
 				getUserDoc,
 				get25Stocks,
 				get25Options,
+				addToShoppingCart,
+				removeFromShoppingCart,
+				getShoppingCart,
+				getOptions,
 			}}
 		>
 			{children}
