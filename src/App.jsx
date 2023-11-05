@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Options from './pages/Options';
 import Tiles from './pages/Tiles';
+import UserManual from './pages/UserManual';
 
 /**
  * The App component for displaying the app.
@@ -66,6 +67,16 @@ function App() {
                 element={
                   <Protected>
                     <Tiles />
+                  </Protected>
+                }
+              />
+              
+              {/* User Manual Page - Password protected */}
+              <Route
+                path='/usermanual'
+                element={
+                  <Protected>
+                    <UserManual />
                   </Protected>
                 }
               />

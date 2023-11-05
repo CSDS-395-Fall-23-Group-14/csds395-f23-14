@@ -77,7 +77,7 @@ function Home() {
       </div>
       <div className='body'>
         <div className="screener-wrapper">
-          <Box sx={{borderBottom: 1}}>
+          <Box sx={{borderBottom: 1, px: "40px"}}>
             <h1 className="screener-h1">Stock Screener</h1>
           </Box>
           <Box
@@ -119,7 +119,7 @@ function Home() {
             </TextField>
           </Box>
           <Box
-            sx={{borderTop: 1, py: "1%"}}
+            sx={{borderTop: 1, py: "1%", px: "40px"}}
           >
             <EnhancedTable
               columns={columns}

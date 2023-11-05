@@ -70,6 +70,7 @@ function NavBar() {
 						<Button label='Home' size='large' onClick={() => navigate('/')}>Home</Button>
 						<Button label='Options' size='large' onClick={() => navigate('/options')}>Options</Button>
 						<Button label='Tiles'size='large' onClick={() => navigate('/tiles')}>Tiles</Button>
+						<Button label='UserManual'size='large' onClick={() => navigate('/usermanual')}>User Manual</Button>
 					</Box>
 				</div>
 			</div>

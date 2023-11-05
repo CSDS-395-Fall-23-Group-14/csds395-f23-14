@@ -33,43 +33,47 @@ function Tiles() {
       </div>
       <div className='body'>
         <div className="screener-wrapper">
-          <Box sx={{borderBottom: 1}}>
+          <Box sx={{borderBottom: 1, px: "40px"}}>
             <h1 className="screener-h1">Tiles</h1>
           </Box>
-          <Grid
-            container
-            spacing={2} 
-            sx={{py: "1%"}}
+          <Box
+            sx={{borderTop: 1, py: "1%", px: "40px"}}
           >
-            <Grid item xs={5}>
-              <Typography
-                gutterBottom
-                variant='h4'
-                component='div'
-                textAlign='center'
-              >
-                Shopping Cart
-              </Typography>
-              <EnhancedTable
-                autoHeight
-                loading={loading}
-              />
-            </Grid>
-            <Grid item xs={7}>
-              <Grid container spacing={2}>
-                {
-                  imageList.map((e, i) =>
-                    <Grid key={e} item xs={3}>
-                      <HedgeFinderTile
-                        name={names[i]}
-                        src={e}
-                      />
-                    </Grid>
-                  )
-                }
+            <Grid
+              container
+              spacing={2} 
+              sx={{py: "1%"}}
+            >
+              <Grid item xs={5}>
+                <Typography
+                  gutterBottom
+                  variant='h4'
+                  component='div'
+                  textAlign='center'
+                >
+                  Shopping Cart
+                </Typography>
+                <EnhancedTable
+                  autoHeight
+                  loading={loading}
+                />
+              </Grid>
+              <Grid item xs={7}>
+                <Grid container spacing={2}>
+                  {
+                    imageList.map((e, i) =>
+                      <Grid key={e} item xs={3}>
+                        <HedgeFinderTile
+                          name={names[i]}
+                          src={e}
+                        />
+                      </Grid>
+                    )
+                  }
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </div>
       </div>
     </>
