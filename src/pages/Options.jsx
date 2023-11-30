@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Box } from '@mui/material';
 import { DataContext } from '../context/DataContext';
 
-import NavBar from '../components/NavBar/NavBar';
+import NavBar from '../components/navbar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 
 /**
