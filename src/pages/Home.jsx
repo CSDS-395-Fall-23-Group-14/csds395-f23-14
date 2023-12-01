@@ -36,28 +36,23 @@ function Home() {
 	}, [get25Stocks]);
   
 	const fields = [
-		'datescraped', 'ticker', 'companyname', 'currentprice', 'shares',
-    'marketvalue', 'notionalvalue', 'assetclass', 'weight', 'sector',
+		'datescraped', 'ticker', 'companyname', 'currentprice', 'assetclass', 'sector',
 	];
 	
 	const headerNames = [
-		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Shares',
-		'Market Value', 'Notional Value', 'Asset Class', 'Weight', 'Sector',
+		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Weight', 'Sector',
 	];
   
   const widths = [
-    0.5, 0.3, 1, 0.5, 0.4,
-    0.5, 0.5, 0.5, 0.4, 0.9,
+    0.5, 0.3, 1, 0.5, 0.5, 0.9,
   ]
   
   const aligns = [
-    'left', 'center', 'center', 'center', 'center',
-    'center', 'center', 'center', 'center', 'left',
+    'left', 'center', 'center', 'center', 'center', 'left',
   ]
   
   const types = [
-    'string', 'string', 'string', 'number', 'number',
-    'number', 'number', 'string', 'number', 'string',
+    'string', 'string', 'string', 'number', 'string', 'string',
   ]
 	
 	const columns = fields.map((_, i) => ({

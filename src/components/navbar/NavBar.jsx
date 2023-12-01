@@ -26,7 +26,7 @@ import EnhancedTable from '../EnhancedTable/EnhancedTable';
 
 function NavBar() {
 	const navigate = useNavigate();
-  const { logOut, getUserAvatar } = useContext(AuthContext);
+  	const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	const [avatar, setAvatar] = useState(null);
 	
@@ -67,7 +67,7 @@ function NavBar() {
 				</div>
 				<div>
 					<Box sx={{ width:'100%', border: 1, borderColor: 'divider', maxWidth: {sm: 600}}}>
-						<Button label='Home' size='large' onClick={() => navigate('/')}>Home</Button>
+						<Button label='Home' size='large' onClick={() => navigate('/')}>Stocks</Button>
 						<Button label='Options' size='large' onClick={() => navigate('/options')}>Options</Button>
 						<Button label='Tiles'size='large' onClick={() => navigate('/tiles')}>Tiles</Button>
 						<Button label='UserManual'size='large' onClick={() => navigate('/usermanual')}>User Manual</Button>
