@@ -48,7 +48,7 @@ function Home() {
   ]
   
   const aligns = [
-    'left', 'center', 'center', 'center', 'center', 'left',
+    'left', 'center', 'center', 'center', 'center', 'center',
   ]
   
   const types = [
