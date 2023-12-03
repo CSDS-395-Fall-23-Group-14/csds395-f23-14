@@ -24,15 +24,32 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 import EnhancedTable from '../EnhancedTable/EnhancedTable';
 
-function NavBar() {
+function NavBar({rows}) {
 	const navigate = useNavigate();
   	const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	const [avatar, setAvatar] = useState(null);
-	
 	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
-	const [rows, setRows] = useState([]);
 	const { getUserShoppingCart } = useContext(AuthContext);
+	const [newRows, setNewRows] = useState([]);
+
+
+	useEffect(() => {
+		console.log(rows);
+		if (rows !== undefined && rows.length > 0) {
+			setNewRows(rows);
+		}
+		else {
+			getUserShoppingCart()
+			.then((d) => {
+				//console.log(d);
+				if (d){
+				setNewRows(d);
+				}
+			})
+		}
+	}, [getUserShoppingCart]);
+	
 
 	const fields = [
 		'ticker', 'companyname', 'currentprice'
@@ -64,15 +81,7 @@ function NavBar() {
 	})
   );
 
-	useEffect(() => {
-		getUserShoppingCart()
-		.then((data) => {
-			console.log(data);
-			if (data){
-			setRows(data);
-			}
-		})
-	}, []);
+	
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -174,7 +183,7 @@ function NavBar() {
 					</Typography>
 					<EnhancedTable
 						autoHeight
-						rows={rows}
+						rows={newRows}
 						columns={columns}
 						loading={false}
 					/>

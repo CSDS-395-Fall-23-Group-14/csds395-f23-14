@@ -27,12 +27,11 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
     updateUserStockShoppingCart(selectedRowData);
   }
 
-  /*
-  // prepopulate checked rows for enhanced table
+  // prepopulate checked for rows 
   useEffect(() => {
 		getUserShoppingCart()
       .then((rows) => {
-        console.log(rows);
+        //console.log(rows);
         if (rows){
           const selections = rows.map(row => row.id);
           setRowSelectionModel(selections);
@@ -41,7 +40,6 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
     
 	}, [getUserShoppingCart, rows]);
 
-  */
 
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { Box } from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
@@ -116,11 +117,16 @@ function Home() {
           <Box
             sx={{borderTop: 1, py: "1%", px: "40px"}}
           >
-            <EnhancedTable
-              columns={columns}
-              rows={data}
-              loading={isLoading}
-              toolbar
+            <DataGrid
+              rows={data ? data : []}
+              columns={columns ? columns : []}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 10 }
+                }
+              }}
+              pageSizeOptions={[5, 10]}
+              HorizontalContentAlignment='Center'
             />
           </Box>
         </div>

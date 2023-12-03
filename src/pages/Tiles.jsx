@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import Navbar from '../components/NavBar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
+import { AuthContext } from '../context/AuthContext';
 
 import {
   Box,
@@ -17,6 +18,7 @@ const names = [
   'Short Put', 'Straddle', 'Strangle', 'Strip'
 ]
 
+
 /**
  * The Tiles component for displaying and selecting hedge finder tiles.
  * 
@@ -25,6 +27,17 @@ const names = [
  */
 function Tiles() {
   const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
+  const { getUserShoppingCart } = useContext(AuthContext);
+  useEffect(() => {
+		getUserShoppingCart()
+		.then((d) => {
+			console.log(d);
+			if (d){
+			setRows(d);
+			}
+		})
+	}, [getUserShoppingCart]);
   
   return (
     <>
