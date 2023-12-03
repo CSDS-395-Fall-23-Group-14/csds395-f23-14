@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { AuthContext } from '../../context/AuthContext';
 import './enhancedtable.css';
@@ -12,18 +12,29 @@ import './enhancedtable.css';
  * @returns {JSX.Element} The rendered React component.
  */
 function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  
   const {
-    //updateUserStockShoppingCart,
-    removeFromUserShoppingCart,
+    updateUserStockShoppingCart,
     getUserShoppingCart
   } = useContext(AuthContext);
 
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+
   const handleCartChange = async (ids) => {
     setRowSelectionModel(ids);
-    //updateUserStockShoppingCart(ids);
+    updateUserStockShoppingCart(ids);
     console.log(ids);
   }
+
+  useEffect(() => {
+		getUserShoppingCart()
+      .then((selections) => {
+        console.log(selections);
+        //const a = rows.filter((r) => selections.includes(r.id));
+        setRowSelectionModel(selections);
+    })
+    
+	}, [getUserShoppingCart, rows]);
 
   
   return (

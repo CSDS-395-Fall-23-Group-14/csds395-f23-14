@@ -57,7 +57,7 @@ function AuthContextProvider({ children }) {
 		setUserDoc,
 		getUserDoc,
 		addToShoppingCart,
-		//updateStockShoppingCart,
+		updateStockShoppingCart,
 		removeFromShoppingCart,
 		getShoppingCart
 	} = useContext(DataContext);
@@ -157,11 +157,10 @@ function AuthContextProvider({ children }) {
 		return await updatePassword(currUser, password);
 	}
 
-	/*
+
 	const updateUserStockShoppingCart = async (ids) => {
 		return await updateStockShoppingCart(currUser.uid, ids);
 	}
-	*/
 
 	const addToUserShoppingCart = async (ids) => {
 		return await addToShoppingCart(currUser.uid, ids);
@@ -194,7 +193,7 @@ function AuthContextProvider({ children }) {
 				getUserDispName,
 				updateUserDispName,
 				updateUserPassword,
-				//updateUserStockShoppingCart,
+				updateUserStockShoppingCart,
 				addToUserShoppingCart,
 				removeFromUserShoppingCart,
 				getUserShoppingCart,
