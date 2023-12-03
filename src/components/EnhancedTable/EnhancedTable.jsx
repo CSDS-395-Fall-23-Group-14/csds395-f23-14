@@ -22,16 +22,24 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
 
   const handleCartChange = async (ids) => {
     setRowSelectionModel(ids);
-    updateUserStockShoppingCart(ids);
-    console.log(ids);
+    const selectedIDs = new Set(ids);
+    const selectedRowData = rows.filter((row) => selectedIDs.has(row.id));
+    console.log(selectedIDs);
+    console.log(selectedRowData);
+    updateUserStockShoppingCart(selectedRowData);
+
+    //console.log(ids.rows);
+    //console.log(ids);
   }
 
   useEffect(() => {
 		getUserShoppingCart()
-      .then((selections) => {
-        console.log(selections);
-        //const a = rows.filter((r) => selections.includes(r.id));
-        setRowSelectionModel(selections);
+      .then((rows) => {
+        console.log(rows);
+        if (rows){
+          const selections = rows.map(row => row.id);
+          setRowSelectionModel(selections);
+        }
     })
     
 	}, [getUserShoppingCart, rows]);
