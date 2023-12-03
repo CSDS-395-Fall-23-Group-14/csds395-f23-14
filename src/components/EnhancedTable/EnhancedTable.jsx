@@ -24,14 +24,11 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
     setRowSelectionModel(ids);
     const selectedIDs = new Set(ids);
     const selectedRowData = rows.filter((row) => selectedIDs.has(row.id));
-    console.log(selectedIDs);
-    console.log(selectedRowData);
     updateUserStockShoppingCart(selectedRowData);
-
-    //console.log(ids.rows);
-    //console.log(ids);
   }
 
+  /*
+  // prepopulate checked rows for enhanced table
   useEffect(() => {
 		getUserShoppingCart()
       .then((rows) => {
@@ -44,7 +41,9 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
     
 	}, [getUserShoppingCart, rows]);
 
-  
+  */
+
+
   return (
     <DataGrid
       rows={rows ? rows : []}

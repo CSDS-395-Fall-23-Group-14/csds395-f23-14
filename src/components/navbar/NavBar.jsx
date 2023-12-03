@@ -31,6 +31,48 @@ function NavBar() {
 	const [avatar, setAvatar] = useState(null);
 	
 	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
+	const [rows, setRows] = useState([]);
+	const { getUserShoppingCart } = useContext(AuthContext);
+
+	const fields = [
+		'ticker', 'companyname', 'currentprice'
+	];
+	
+	const headerNames = [
+		'Ticker', 'Company Name', 'Current Price'
+	];
+  
+	const widths = [
+		0.5, 1, 0.5
+	]
+  
+	const aligns = [
+		'center', 'center', 'center'
+	]
+  
+	const types = [
+		'string', 'string', 'number'
+	]
+	
+	const columns = fields.map((_, i) => ({
+		field: fields[i],
+		headerName: headerNames[i],
+		flex: widths[i],
+		align: aligns[i],
+		headerAlign: aligns[i],
+		type: types[i]
+	})
+  );
+
+	useEffect(() => {
+		getUserShoppingCart()
+		.then((data) => {
+			console.log(data);
+			if (data){
+			setRows(data);
+			}
+		})
+	}, []);
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -78,7 +120,7 @@ function NavBar() {
 				<div className="cart-button" sx={{ pl: '1rem' }}>
 					<IconButton onClick={() => setShoppingCartOpen(true)}>
   					<Badge badgeContent={1} color="secondary">
-							<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
+						<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
   					</Badge>
 					</IconButton>
 				</div>
@@ -132,7 +174,9 @@ function NavBar() {
 					</Typography>
 					<EnhancedTable
 						autoHeight
-						loading={true}
+						rows={rows}
+						columns={columns}
+						loading={false}
 					/>
 				</Box>
 			</Modal>
