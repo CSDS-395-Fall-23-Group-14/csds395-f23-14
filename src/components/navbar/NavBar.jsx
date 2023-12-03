@@ -52,25 +52,25 @@ function NavBar({rows}) {
 	
 
 	const fields = [
-		'ticker', 'companyname', 'currentprice'
-	];
-	
-	const headerNames = [
-		'Ticker', 'Company Name', 'Current Price'
-	];
-  
-	const widths = [
-		0.5, 1, 0.5
-	]
-  
-	const aligns = [
-		'center', 'center', 'center'
-	]
-  
-	const types = [
-		'string', 'string', 'number'
-	]
-	
+		'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
+	  ];
+	  
+	  const headerNames = [
+		'Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'
+	  ];
+	  
+	  const widths = [
+		0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+	  ]
+	  
+	  const aligns = [
+		'center', 'center', 'center', 'center', 'center', 'center'
+	  ]
+	  
+	  const types = [
+		'string','number', 'number', 'string', 'number', 'number'
+	  ]
+	  
 	const columns = fields.map((_, i) => ({
 		field: fields[i],
 		headerName: headerNames[i],

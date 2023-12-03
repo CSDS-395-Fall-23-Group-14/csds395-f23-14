@@ -29,6 +29,36 @@ function Tiles() {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const { getUserShoppingCart } = useContext(AuthContext);
+
+  const fields = [
+    'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
+  ];
+  
+  const headerNames = [
+    'Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'
+  ];
+  
+  const widths = [
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+  ]
+  
+  const aligns = [
+    'center', 'center', 'center', 'center', 'center', 'center'
+  ]
+  
+  const types = [
+    'string','number', 'number', 'string', 'number', 'number'
+  ]
+  
+  const columns = fields.map((_, i) => ({
+    field: fields[i],
+    headerName: headerNames[i],
+    flex: widths[i],
+    align: aligns[i],
+    headerAlign: aligns[i],
+    type: types[i]
+  }));
+
   useEffect(() => {
 		getUserShoppingCart()
 		.then((d) => {
@@ -68,7 +98,9 @@ function Tiles() {
                 </Typography>
                 <EnhancedTable
                   autoHeight
-                  loading={loading}
+                  rows={rows}
+                  columns={columns}
+                  toolbar
                 />
               </Grid>
               <Grid item xs={7}>
