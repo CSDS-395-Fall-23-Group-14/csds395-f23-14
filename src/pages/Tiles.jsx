@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import Navbar from '../components/navbar/NavBar';
+import Navbar from '../components/NavBar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 import { AuthContext } from '../context/AuthContext';
@@ -67,10 +67,9 @@ function Tiles() {
   useEffect(() => {
 		getUserShoppingCart()
 		.then((d) => {
-			console.log(d);
-			if (d){
-			setRows(d);
-			}
+      console.log(d);
+      if (d) setRows(d);
+      setLoading(false);
 		})
 	}, [getUserShoppingCart]);
 
@@ -127,7 +126,8 @@ function Tiles() {
                   onRowSelectionModelChange={(ids) => handleCartChange(ids)}
                   rowSelectionModel={selectionModel}
                   HorizontalContentAlignment='Center'
-                    />
+                  loading={loading}
+                />
               </Grid>
               <Grid item xs={7}>
                 <Grid container spacing={2}>

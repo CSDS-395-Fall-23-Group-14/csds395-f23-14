@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
-import NavBar from '../components/navbar/NavBar';
+import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 import EnhancedBarChart from '../components/EnhancedBarChart/EnhancedBarChart';
 

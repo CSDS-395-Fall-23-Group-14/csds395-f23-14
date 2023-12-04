@@ -5,26 +5,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 import logo from "../images/example.png";
 
-import Navbar from '../components/navbar/NavBar';
+import Navbar from '../components/NavBar/NavBar';
 
-import {
-  Box
-} from '@mui/material';
-import { LogoDev } from '@mui/icons-material';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
+import { Box } from '@mui/material';
 
 function UserManual() {
   return (
