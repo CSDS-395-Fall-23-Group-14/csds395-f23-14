@@ -19,6 +19,8 @@ import {
 import logo from "../../images/EZ$-logo-navbar.png";
 import "./navbar.css";
 
+
+
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeContext } from '../../context/ThemeContext';
 
@@ -32,6 +34,7 @@ function NavBar({rows}) {
 	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
 	const { getUserShoppingCart } = useContext(AuthContext);
 	const [newRows, setNewRows] = useState([]);
+	
 
 
 	useEffect(() => {
