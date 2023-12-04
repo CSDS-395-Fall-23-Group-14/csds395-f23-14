@@ -3,6 +3,9 @@ import { useState, useEffect, useContext } from 'react';
 
 import { Box } from '@mui/material';
 import { DataContext } from '../context/DataContext';
+import { AuthContext } from '../context/AuthContext';
+
+
 
 import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
@@ -15,7 +18,9 @@ function Options() {
   const { get25Options } = useContext(DataContext);
   
   const [data, setData] = useState([]);
+  const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { getUserShoppingCart } = useContext(AuthContext);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +30,16 @@ function Options() {
     };
     fetchData();
   }, [get25Options]);
+
+  useEffect(() => {
+		getUserShoppingCart()
+		.then((d) => {
+			console.log(d);
+			if (d){
+			setRows(d);
+			}
+		})
+	}, [getUserShoppingCart, data]);
     
   const fields = [
     'dateScraped', 'ticker', 'ask', 'bid', 'change', 'percentchange',
@@ -63,7 +78,7 @@ function Options() {
   return (
     <>
       <div className='header'>
-        <NavBar />
+        <NavBar rows={rows} />
       </div>
       <div className='body'>
         <div className="screener-wrapper">

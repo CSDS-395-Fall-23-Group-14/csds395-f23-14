@@ -73,21 +73,26 @@ function DataContextProvider({ children }) {
 		});
 		return data;
 	}
-	
+
+	const updateStockShoppingCart = async (uid, ids) => {
+		const userDoc = doc(db, "users", uid);
+		return await updateDoc(userDoc, { shoppingCart: ids });
+	}
+
 	const addToShoppingCart = async (uid, ids) => {
 		const userDoc = doc(db, "users", uid);
-		return await updateDoc(userDoc, { shoppingCart: arrayUnion(ids) });
+		return await updateDoc(userDoc, { shoppingCart: arrayUnion(...ids) });
 	}
 	
 	const removeFromShoppingCart = async (uid, ids) => {
 		const userDoc = doc(db, "users", uid);
-		return await updateDoc(userDoc, { shoppingCart: arrayRemove(ids) });
+		return await updateDoc(userDoc, { shoppingCart: arrayRemove(...ids) });
 	}
 	
 	const getShoppingCart = async (uid) => {
 		const userDoc = doc(db, "users", uid);
 		const snapshot = await getDoc(userDoc);
-		return snapshot.data;
+		return snapshot.data().shoppingCart;
 	}
 	
 	const getOptions = async (ids) => {
@@ -108,6 +113,7 @@ function DataContextProvider({ children }) {
 				getUserDoc,
 				get25Stocks,
 				get25Options,
+				updateStockShoppingCart,
 				addToShoppingCart,
 				removeFromShoppingCart,
 				getShoppingCart,

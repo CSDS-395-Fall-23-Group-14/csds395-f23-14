@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-
+import { AuthContext } from '../../context/AuthContext';
 import './enhancedtable.css';
 
 /**
@@ -12,6 +12,36 @@ import './enhancedtable.css';
  * @returns {JSX.Element} The rendered React component.
  */
 function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
+  
+  const {
+    updateUserStockShoppingCart,
+    getUserShoppingCart
+  } = useContext(AuthContext);
+
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+
+  const handleCartChange = async (ids) => {
+    setRowSelectionModel(ids);
+    const selectedIDs = new Set(ids);
+    const selectedRowData = rows.filter((row) => selectedIDs.has(row.id));
+    updateUserStockShoppingCart(selectedRowData);
+  }
+
+  // prepopulate checked for rows 
+  useEffect(() => {
+		getUserShoppingCart()
+      .then((rows) => {
+        //console.log(rows);
+        if (rows){
+          const selections = rows.map(row => row.id);
+          setRowSelectionModel(selections);
+        }
+    })
+    
+	}, [getUserShoppingCart, rows]);
+
+
+
   return (
     <DataGrid
       rows={rows ? rows : []}
@@ -23,6 +53,8 @@ function EnhancedTable({ columns, rows, toolbar, loading, autoHeight }) {
       }}
       pageSizeOptions={[5, 10]}
       checkboxSelection
+      onRowSelectionModelChange={(ids) => handleCartChange(ids)}
+      rowSelectionModel={rowSelectionModel}
       slots={{ toolbar: toolbar ? GridToolbar : null }}
       HorizontalContentAlignment='Center'
       loading={loading}

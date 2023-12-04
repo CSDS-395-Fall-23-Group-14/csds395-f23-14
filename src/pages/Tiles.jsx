@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import Navbar from '../components/NavBar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
-
+import { AuthContext } from '../context/AuthContext';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import {
   Box,
   Grid,
@@ -17,6 +18,7 @@ const names = [
   'Short Put', 'Straddle', 'Strangle', 'Strip'
 ]
 
+
 /**
  * The Tiles component for displaying and selecting hedge finder tiles.
  * 
@@ -25,6 +27,65 @@ const names = [
  */
 function Tiles() {
   const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
+  const { getUserShoppingCart } = useContext(AuthContext);
+  
+
+  const fields = [
+    'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
+  ];
+  
+  const headerNames = [
+    'Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'
+  ];
+  
+  const widths = [
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+  ]
+  
+  const aligns = [
+    'center', 'center', 'center', 'center', 'center', 'center'
+  ]
+  
+  const types = [
+    'string','number', 'number', 'string', 'number', 'number'
+  ]
+
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [previousSelection, setPreviousSelection] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState({}); // use this for fetching graphs
+  
+  const columns = fields.map((_, i) => ({
+    field: fields[i],
+    headerName: headerNames[i],
+    flex: widths[i],
+    align: aligns[i],
+    headerAlign: aligns[i],
+    type: types[i]
+  }));
+
+  useEffect(() => {
+		getUserShoppingCart()
+		.then((d) => {
+			console.log(d);
+			if (d){
+			setRows(d);
+			}
+		})
+	}, [getUserShoppingCart]);
+
+  const handleCartChange = async (newSelection) => {
+		setSelectionModel(newSelection);
+    setPreviousSelection(newSelection);
+		const newSelectionSet = newSelection.filter((element) => !previousSelection.includes(element));
+    setSelectionModel(newSelectionSet);
+    console.log(newSelectionSet);
+    console.log(newSelectionSet[0]);
+    setPreviousSelection(newSelectionSet);
+    const newSelectedRow = rows.filter((row) => row.id === newSelectionSet[0]);
+    console.log(newSelectedRow[0]);
+    setSelectedRowData(newSelectedRow[0]);
+	}
   
   return (
     <>
@@ -53,10 +114,20 @@ function Tiles() {
                 >
                   Shopping Cart
                 </Typography>
-                <EnhancedTable
-                  autoHeight
-                  loading={loading}
-                />
+                <DataGrid
+                  rows={rows ? rows : []}
+                  columns={columns ? columns : []}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 }
+                    }
+                  }}
+                  pageSizeOptions={[5, 10]}
+                  checkboxSelection
+                  onRowSelectionModelChange={(ids) => handleCartChange(ids)}
+                  rowSelectionModel={selectionModel}
+                  HorizontalContentAlignment='Center'
+                    />
               </Grid>
               <Grid item xs={7}>
                 <Grid container spacing={2}>

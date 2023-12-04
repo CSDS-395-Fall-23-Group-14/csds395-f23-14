@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { Box } from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 import NavBar from '../components/NavBar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
@@ -36,28 +37,23 @@ function Home() {
 	}, [get25Stocks]);
   
 	const fields = [
-		'datescraped', 'ticker', 'companyname', 'currentprice', 'shares',
-    'marketvalue', 'notionalvalue', 'assetclass', 'weight', 'sector',
+		'datescraped', 'ticker', 'companyname', 'currentprice', 'assetclass', 'sector',
 	];
 	
 	const headerNames = [
-		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Shares',
-		'Market Value', 'Notional Value', 'Asset Class', 'Weight', 'Sector',
+		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Weight', 'Sector',
 	];
   
   const widths = [
-    0.5, 0.3, 1, 0.5, 0.4,
-    0.5, 0.5, 0.5, 0.4, 0.9,
+    0.5, 0.3, 1, 0.5, 0.5, 0.9,
   ]
   
   const aligns = [
-    'left', 'center', 'center', 'center', 'center',
-    'center', 'center', 'center', 'center', 'left',
+    'left', 'center', 'center', 'center', 'center', 'center',
   ]
   
   const types = [
-    'string', 'string', 'string', 'number', 'number',
-    'number', 'number', 'string', 'number', 'string',
+    'string', 'string', 'string', 'number', 'string', 'string',
   ]
 	
 	const columns = fields.map((_, i) => ({
@@ -121,11 +117,16 @@ function Home() {
           <Box
             sx={{borderTop: 1, py: "1%", px: "40px"}}
           >
-            <EnhancedTable
-              columns={columns}
-              rows={data}
-              loading={isLoading}
-              toolbar
+            <DataGrid
+              rows={data ? data : []}
+              columns={columns ? columns : []}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 10 }
+                }
+              }}
+              pageSizeOptions={[5, 10]}
+              HorizontalContentAlignment='Center'
             />
           </Box>
         </div>
