@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { Box } from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 import NavBar from '../components/NavBar/NavBar';
-import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 import EnhancedBarChart from '../components/EnhancedBarChart/EnhancedBarChart';
 
 import { DataContext } from '../context/DataContext';
@@ -36,35 +35,20 @@ function Home() {
 		fetchData();
 	}, [get25Stocks]);
   
-	const fields = [
-		'datescraped', 'ticker', 'companyname', 'currentprice', 'assetclass', 'sector',
-	];
-	
-	const headerNames = [
-		'Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Weight', 'Sector',
-	];
+	const fields =      ['datescraped',  'ticker', 'companyname',  'currentprice',  'assetclass',  'sector'];
+	const headerNames = ['Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Sector'];
+  const widths =      [0.5,            0.3,      1,              0.5,             0.5,           0.9     ];
+  const aligns =      ['left',         'center', 'center',       'center',        'center',      'center'];
+  const types =       ['string',       'string', 'string',       'number',        'string',      'string'];
   
-  const widths = [
-    0.5, 0.3, 1, 0.5, 0.5, 0.9,
-  ]
-  
-  const aligns = [
-    'left', 'center', 'center', 'center', 'center', 'center',
-  ]
-  
-  const types = [
-    'string', 'string', 'string', 'number', 'string', 'string',
-  ]
-	
 	const columns = fields.map((_, i) => ({
-			field: fields[i],
-			headerName: headerNames[i],
-      flex: widths[i],
-      align: aligns[i],
-      headerAlign: aligns[i],
-      type: types[i]
-		})
-  );
+    field: fields[i],
+    headerName: headerNames[i],
+    flex: widths[i],
+    align: aligns[i],
+    headerAlign: aligns[i],
+    type: types[i]
+  }));
   
   return (
     <>

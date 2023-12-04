@@ -26,54 +26,41 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 import EnhancedTable from '../EnhancedTable/EnhancedTable';
 
-function NavBar({rows}) {
+function NavBar({ rows }) {
 	const navigate = useNavigate();
-  	const { logOut, getUserAvatar } = useContext(AuthContext);
+	const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	const [avatar, setAvatar] = useState(null);
 	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
 	const { getUserShoppingCart } = useContext(AuthContext);
 	const [newRows, setNewRows] = useState([]);
+	const [shopCount, setShopCount] = useState(null);
 	
-
-
 	useEffect(() => {
-		console.log(rows);
 		if (rows !== undefined && rows.length > 0) {
 			setNewRows(rows);
-		}
-		else {
+			setShopCount(rows.length);
+		} else {
 			getUserShoppingCart()
-			.then((d) => {
-				//console.log(d);
-				if (d){
-				setNewRows(d);
+			.then((rows) => {
+				if (rows){
+					setNewRows(rows);
+					setShopCount(rows.length);
 				}
 			})
 		}
-	}, [getUserShoppingCart]);
+	}, [getUserShoppingCart, rows]);
 	
-
-	const fields = [
-		'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
-	  ];
-	  
-	  const headerNames = [
-		'Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'
-	  ];
-	  
-	  const widths = [
-		0.5, 0.5, 0.5, 0.5, 0.5, 0.5
-	  ]
-	  
-	  const aligns = [
-		'center', 'center', 'center', 'center', 'center', 'center'
-	  ]
-	  
-	  const types = [
-		'string','number', 'number', 'string', 'number', 'number'
-	  ]
-	  
+	const fields = ['ticker', 'ask', 'bid', 'position', 'strike', 'volume'];
+	
+	const headerNames = ['Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'];
+	
+	const widths = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
+	
+	const aligns = ['center', 'center', 'center', 'center', 'center', 'center'];
+	
+	const types = ['string','number', 'number', 'string', 'number', 'number'];
+	
 	const columns = fields.map((_, i) => ({
 		field: fields[i],
 		headerName: headerNames[i],
@@ -81,10 +68,7 @@ function NavBar({rows}) {
 		align: aligns[i],
 		headerAlign: aligns[i],
 		type: types[i]
-	})
-  );
-
-	
+	}));
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -109,7 +93,7 @@ function NavBar({rows}) {
 							InputProps={{
 								sx: {
 									borderRadius: 10,
-									'&.Mui-focused fieldset': {borderColor: 'yellow'}
+									'&.Mui-focused fieldset': { borderColor: 'yellow' }
 								}
 							}}
 							id="outlined-basic"
@@ -131,7 +115,7 @@ function NavBar({rows}) {
 			<div className="navbar-right">
 				<div className="cart-button" sx={{ pl: '1rem' }}>
 					<IconButton onClick={() => setShoppingCartOpen(true)}>
-  					<Badge badgeContent={1} color="secondary">
+  					<Badge badgeContent={shopCount} color="secondary" invisible={shopCount === 0}>
 						<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
   					</Badge>
 					</IconButton>
