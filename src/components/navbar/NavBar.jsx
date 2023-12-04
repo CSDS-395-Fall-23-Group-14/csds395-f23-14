@@ -19,18 +19,72 @@ import {
 import logo from "../../images/EZ$-logo-navbar.png";
 import "./navbar.css";
 
+
+
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeContext } from '../../context/ThemeContext';
 
 import EnhancedTable from '../EnhancedTable/EnhancedTable';
 
-function NavBar() {
+function NavBar({rows}) {
 	const navigate = useNavigate();
   	const { logOut, getUserAvatar } = useContext(AuthContext);
 	const { setThemeMode, themeMode } = useContext(ThemeContext);
 	const [avatar, setAvatar] = useState(null);
-	
 	const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
+	const { getUserShoppingCart } = useContext(AuthContext);
+	const [newRows, setNewRows] = useState([]);
+	
+
+
+	useEffect(() => {
+		console.log(rows);
+		if (rows !== undefined && rows.length > 0) {
+			setNewRows(rows);
+		}
+		else {
+			getUserShoppingCart()
+			.then((d) => {
+				//console.log(d);
+				if (d){
+				setNewRows(d);
+				}
+			})
+		}
+	}, [getUserShoppingCart]);
+	
+
+	const fields = [
+		'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
+	  ];
+	  
+	  const headerNames = [
+		'Ticker', 'Ask', 'Bid', 'Position', 'Strike', 'Volume'
+	  ];
+	  
+	  const widths = [
+		0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+	  ]
+	  
+	  const aligns = [
+		'center', 'center', 'center', 'center', 'center', 'center'
+	  ]
+	  
+	  const types = [
+		'string','number', 'number', 'string', 'number', 'number'
+	  ]
+	  
+	const columns = fields.map((_, i) => ({
+		field: fields[i],
+		headerName: headerNames[i],
+		flex: widths[i],
+		align: aligns[i],
+		headerAlign: aligns[i],
+		type: types[i]
+	})
+  );
+
+	
 	
 	useEffect(() => {
 		setAvatar(getUserAvatar());
@@ -78,7 +132,7 @@ function NavBar() {
 				<div className="cart-button" sx={{ pl: '1rem' }}>
 					<IconButton onClick={() => setShoppingCartOpen(true)}>
   					<Badge badgeContent={1} color="secondary">
-							<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
+						<ShoppingCartOutlined sx={{ width: 35, height: 35 }} />
   					</Badge>
 					</IconButton>
 				</div>
@@ -132,7 +186,9 @@ function NavBar() {
 					</Typography>
 					<EnhancedTable
 						autoHeight
-						loading={true}
+						rows={newRows}
+						columns={columns}
+						loading={false}
 					/>
 				</Box>
 			</Modal>
