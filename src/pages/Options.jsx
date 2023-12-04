@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 
 
 
-import NavBar from '../components/NavBar/NavBar';
+import NavBar from '../components/navbar/NavBar';
 import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 
 /**
