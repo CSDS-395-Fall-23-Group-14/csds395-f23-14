@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Children } from 'react';
 import { DataContext } from '../context/DataContext';
 
 import Navbar from '../components/NavBar/NavBar';
@@ -64,17 +64,14 @@ function Tiles() {
 
 
   useEffect(() => {
-    if (rows != undefined && rows.length > 0) {
       setRows(rows);
-    }
-    else {
       getUserShoppingCart()
       .then((d) => {
         if (d){
         setRows(d);
         }
       })
-    }
+
 	}, [getUserShoppingCart]);
 
 
@@ -107,7 +104,27 @@ function Tiles() {
   fetchData();
 }, [get25Options]);
 
-const [show, setShow] = useState(true);
+  function getCartSize() {
+    if (selectedRowData == undefined) {
+      return 0;
+    }
+    else {
+      return selectedRowData;
+    }
+  }
+
+  function getX() {
+    if (getCartSize() === 0) {
+      return [1,2];
+    }
+    else {
+      return selectedRowData.bear.axes.x;
+    }
+  }
+
+  function getType() {
+
+  }
   
   return (
     <>
@@ -151,14 +168,14 @@ const [show, setShow] = useState(true);
                   onRowSelectionModelChange={(ids) => handleCartChange(ids)}
                   rowSelectionModel={selectionModel}
                   HorizontalContentAlignment='Center'
-                  loading={loading}
+                  loading={isLoading}
                 />
               </Grid>
               <Grid item xs={6}>
                 <Grid container spacing={6}>
                   {
                     imageList.map((e, i) =>
-                      <Grid key={e} item xs={3} >
+                      <Grid key={e} item xs={3}>
                         <HedgeFinderTile
                           name={names[i]}
                           src={e}>
@@ -168,10 +185,10 @@ const [show, setShow] = useState(true);
                   }
                 </Grid> 
                 <LineChart
-                xAxis={[{ data: selectedRowData.bear.axes.x}]}
+                xAxis={[{data: [1,2]}]}
                 series={[
                   {
-                    data: selectedRowData.bear.axes.long,
+                    data: [1,2]
                   },
                 ]}
                 width={500}

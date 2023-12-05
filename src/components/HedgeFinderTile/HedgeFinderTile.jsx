@@ -14,7 +14,7 @@ function HedgeFinderTile({ name, src }) {
   
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea >
         <CardMedia
           component="img"
           height='110'
