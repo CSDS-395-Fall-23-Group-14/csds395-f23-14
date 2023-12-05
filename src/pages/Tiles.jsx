@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { DataContext } from '../context/DataContext';
 
 import Navbar from '../components/NavBar/NavBar';
 import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
-import EnhancedTable from '../components/EnhancedTable/EnhancedTable';
 import { AuthContext } from '../context/AuthContext';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { LineChart } from '@mui/x-charts/LineChart';
 import {
   Box,
   Grid,
@@ -13,9 +14,7 @@ import {
 const images = require.context('../images/Hedge-Finder-Images', true);
 const imageList = images.keys().map(image => images(image));
 const names = [
-  'Bear Spread', 'Bull Spread', 'Butterfly Spread', 'Condor Spread',
-  'Long Call', 'Long Put', 'Risk Reversal', 'Short Call',
-  'Short Put', 'Straddle', 'Strangle', 'Strip'
+  'Bear Spread', 'Bull Spread', 'Straddle', 'Strangle', 'Strip', 'Strap'
 ]
 
 
@@ -26,10 +25,13 @@ const names = [
  * @returns {JSX.Element} The rendered React component.
  */
 function Tiles() {
-  const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const { getUserShoppingCart } = useContext(AuthContext);
   
+
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [previousSelection, setPreviousSelection] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState({}); // use this for fetching graphs
 
   const fields = [
     'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
@@ -50,10 +52,6 @@ function Tiles() {
   const types = [
     'string','number', 'number', 'string', 'number', 'number'
   ]
-
-  const [selectionModel, setSelectionModel] = useState([]);
-  const [previousSelection, setPreviousSelection] = useState([]);
-  const [selectedRowData, setSelectedRowData] = useState({}); // use this for fetching graphs
   
   const columns = fields.map((_, i) => ({
     field: fields[i],
@@ -64,14 +62,21 @@ function Tiles() {
     type: types[i]
   }));
 
+
   useEffect(() => {
-		getUserShoppingCart()
-		.then((d) => {
-      console.log(d);
-      if (d) setRows(d);
-      setLoading(false);
-		})
+    if (rows != undefined && rows.length > 0) {
+      setRows(rows);
+    }
+    else {
+      getUserShoppingCart()
+      .then((d) => {
+        if (d){
+        setRows(d);
+        }
+      })
+    }
 	}, [getUserShoppingCart]);
+
 
   const handleCartChange = async (newSelection) => {
 		setSelectionModel(newSelection);
@@ -86,8 +91,28 @@ function Tiles() {
     setSelectedRowData(newSelectedRow[0]);
 	}
   
+  //console.log(selectedRowData.bear.axes.x);
+
+  const { get25Options } = useContext(DataContext);
+
+  const [data, setData] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const optionData = await get25Options();
+      setData(optionData);
+      setIsLoading(false);
+  };
+  fetchData();
+}, [get25Options]);
+
+const [show, setShow] = useState(true);
+  
   return (
     <>
+    <div>
+    </div>
       <div className='header'>
         <Navbar />
       </div>
@@ -129,19 +154,29 @@ function Tiles() {
                   loading={loading}
                 />
               </Grid>
-              <Grid item xs={7}>
-                <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Grid container spacing={6}>
                   {
                     imageList.map((e, i) =>
-                      <Grid key={e} item xs={3}>
+                      <Grid key={e} item xs={3} >
                         <HedgeFinderTile
                           name={names[i]}
-                          src={e}
-                        />
+                          src={e}>
+                        </HedgeFinderTile>
                       </Grid>
                     )
                   }
-                </Grid>
+                </Grid> 
+                <LineChart
+                xAxis={[{ data: selectedRowData.bear.axes.x}]}
+                series={[
+                  {
+                    data: selectedRowData.bear.axes.long,
+                  },
+                ]}
+                width={500}
+                height={300}
+              />
               </Grid>
             </Grid>
           </Box>

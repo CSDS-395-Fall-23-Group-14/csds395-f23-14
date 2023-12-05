@@ -12,7 +12,7 @@ import EnhancedTable from '../../components/EnhancedTable/EnhancedTable';
 
 function OptionScreener() {
 
-    const { get25Options } = useContext(DataContext);
+  const { get25Options } = useContext(DataContext);
 	
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +29,7 @@ function OptionScreener() {
     
     const fields = [
 		'dateScraped','ticker', 'ask', 'bid', 'change',
-        'percentchange','openinterest','intradayprice','position', 'strike', 'volume', 'expiration',
+    'percentchange','openinterest','intradayprice','position', 'strike', 'volume', 'expiration',
 	];
 	
 	const headerNames = [
