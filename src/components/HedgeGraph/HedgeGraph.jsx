@@ -27,9 +27,15 @@ function HedgeGraph({ option, type }) {
        } else if (type == "strip") {
         x = option.strip.axes.x;
         y = option.strip.axes.y;
-       } else {
+       } else if (type == "strap") {
         x = option.strap.axes.x;
         y = option.strap.axes.y;
+       } else if (type == "long") {
+        x = option.x;
+        y = option.long;
+       } else {
+        x = option.x;
+        y = option.short;
        }
 
     return (
