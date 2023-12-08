@@ -53,7 +53,7 @@ function DataContextProvider({ children }) {
 	}
 	
 	const get25Stocks = async () => {
-		const q = query(collection(db, 'stocks'), limit(250));
+		const q = query(collection(db, 'stocks'), limit(300));
 		const snapshot = await getDocs(q);
 		const data = snapshot.docs.map(stock => stock.data())
 		let id = 0;
@@ -64,7 +64,7 @@ function DataContextProvider({ children }) {
 	}
 	
 	const get25Options = async () => {
-		const q = query(collection(db, 'options'), limit(250));
+		const q = query(collection(db, 'options'), limit(300));
 		const snapshot = await getDocs(q);
 		const data = snapshot.docs.map(option => option.data());
 		let id = 0;
