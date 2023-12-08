@@ -6,6 +6,10 @@ import HedgeFinderTile from '../components/HedgeFinderTile/HedgeFinderTile';
 import { AuthContext } from '../context/AuthContext';
 import { DataGrid } from '@mui/x-data-grid';
 import { LineChart } from '@mui/x-charts/LineChart';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import HedgeGraph from '../components/HedgeGraph/HedgeGraph.jsx';
 import {
   Box,
   Grid,
@@ -32,6 +36,8 @@ function Tiles() {
   const [selectionModel, setSelectionModel] = useState([]);
   const [previousSelection, setPreviousSelection] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState({}); // use this for fetching graphs
+  const [possibleTypes, setPossibleTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
 
   const fields = [
     'ticker', 'ask', 'bid', 'position', 'strike', 'volume'
@@ -80,12 +86,16 @@ function Tiles() {
     setPreviousSelection(newSelection);
 		const newSelectionSet = newSelection.filter((element) => !previousSelection.includes(element));
     setSelectionModel(newSelectionSet);
-    console.log(newSelectionSet);
-    console.log(newSelectionSet[0]);
+   // console.log(newSelectionSet);
+   // console.log("?????????????/")
+  //  console.log(newSelectionSet[0]);
     setPreviousSelection(newSelectionSet);
     const newSelectedRow = rows.filter((row) => row.id === newSelectionSet[0]);
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(newSelectedRow[0]);
     setSelectedRowData(newSelectedRow[0]);
+    setPossibleTypes(getPossibleTypes(newSelectedRow[0]));
+    console.log(possibleTypes);
 	}
   
   //console.log(selectedRowData.bear.axes.x);
@@ -122,9 +132,41 @@ function Tiles() {
     }
   }
 
+  function getPossibleTypes(option) {
+    let res = [];
+    if (option) {
+    if (option.hasOwnProperty("bull")) {
+      res.push("bull");
+    }
+    if (option.bear) {
+      res.push("bear")
+    }
+    if (option.straddle) {
+      res.push("straddle")
+    }
+    if (option.strangle) {
+      res.push("strangle")
+    }
+    if (option.strip) {
+      res.push("strip");
+    }
+    if (option.strap) {
+      res.push("strap")
+    }
+  }
+    return res;
+  }
+
   function getType() {
 
   }
+
+  const handleSelectChange = (e) => {
+     const value = e.target.value;
+    setSelectedType(value);
+    console.log(selectedType);
+  
+};
   
   return (
     <>
@@ -184,16 +226,25 @@ function Tiles() {
                     )
                   }
                 </Grid> 
-                <LineChart
-                xAxis={[{data: [1,2]}]}
-                series={[
-                  {
-                    data: [1,2]
-                  },
-                ]}
-                width={500}
-                height={300}
-              />
+              <HedgeGraph option={selectedRowData} type={selectedType}>
+
+              </HedgeGraph>
+              <FormControl fullWidth>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          
+           value={selectedType}
+          // label="Age"
+           onChange={handleSelectChange}
+        >
+          {
+            possibleTypes.map((pt) => {
+             return (<MenuItem value={pt}>{pt}</MenuItem>)
+            })
+          }
+        </Select>
+      </FormControl>
               </Grid>
             </Grid>
           </Box>
