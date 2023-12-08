@@ -6,26 +6,8 @@ import { ThemeContext } from '../../context/ThemeContext';
 function HedgeGraph({ option, type }) {
 
     if (!type || !option) {
-        return (
-            <LineChart
-                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-                series={[
-                    {
-                        curve: "linear",
-                        data: [0, 0, 0, 0, 0, 0],
-                    },
-                ]}
-                sx={
-                    {'.MuiMarkElement-root': {
-                        stroke: '#8884d8',
-                        scale: '0.6',
-                        fill: '#fff',
-                        strokeWidth: 2,
-                      },}
-                }
-                width={500}
-                height={300}
-            />
+        return ( 
+        <p>SELECT AN OPTION FROM SHOPPING CART AND A HEDGING STRATEGY BELOW</p>
         )
     } else {
         let x;
