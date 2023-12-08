@@ -159,10 +159,6 @@ function Tiles() {
     return res;
   }
 
-  function getType() {
-
-  }
-
   const handleSelectChange = (e) => {
      const value = e.target.value;
     setSelectedType(value);
