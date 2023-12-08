@@ -35,11 +35,11 @@ function Home() {
 		fetchData();
 	}, [get25Stocks]);
   
-	const fields =      ['datescraped',  'ticker', 'companyname',  'currentprice',  'assetclass',  'sector'];
-	const headerNames = ['Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Sector'];
-  const widths =      [0.5,            0.3,      1,              0.5,             0.5,           0.9     ];
-  const aligns =      ['left',         'center', 'center',       'center',        'center',      'center'];
-  const types =       ['string',       'string', 'string',       'number',        'string',      'string'];
+	const fields =      ['datescraped',  'ticker', 'companyname',  'currentprice',  'assetclass',  'sector', 'intrinsic_val'];
+	const headerNames = ['Date Scraped', 'Ticker', 'Company Name', 'Current Price', 'Asset Class', 'Sector', 'Intrinsic Value'];
+  const widths =      [0.5,            0.3,      1,              0.5,             0.5,           0.9, .5     ];
+  const aligns =      ['left',         'center', 'center',       'center',        'center',      'center', 'center'];
+  const types =       ['string',       'string', 'string',       'number',        'string',      'string', 'string'];
   
 	const columns = fields.map((_, i) => ({
     field: fields[i],
