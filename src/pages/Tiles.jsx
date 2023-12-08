@@ -153,6 +153,8 @@ function Tiles() {
     if (option.strap) {
       res.push("strap")
     }
+    res.push("long");
+    res.push("short");
   }
     return res;
   }
